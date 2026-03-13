@@ -21,8 +21,6 @@ import {
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
 import { ConceptCallout } from "@/components/shared/concept-callout"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 
 type ModelType = "linear" | "tree" | "randomForest" | "neural"
 type Point2D = { x: number; y: number; label: 0 | 1 }
@@ -39,19 +37,16 @@ function generateData(complexity: number): Point2D[] {
   for (let i = 0; i < n; i++) {
     const label: 0 | 1 = i < n / 2 ? 0 : 1
     if (complexity <= 0.3) {
-      // Linearly separable
       const cx = label === 0 ? -1.5 : 1.5
       const cy = label === 0 ? -1.5 : 1.5
       points.push({ x: randomGaussian(cx, 0.6), y: randomGaussian(cy, 0.6), label })
     } else if (complexity <= 0.6) {
-      // XOR-like
       const quadrant = i % 4
       const cx = quadrant < 2 ? -1.5 : 1.5
       const cy = quadrant % 2 === 0 ? -1.5 : 1.5
       const l: 0 | 1 = (quadrant === 0 || quadrant === 3) ? 0 : 1
       points.push({ x: randomGaussian(cx, 0.5), y: randomGaussian(cy, 0.5), label: l })
     } else {
-      // Circular / concentric
       const angle = Math.random() * Math.PI * 2
       const r = label === 0 ? randomGaussian(1, 0.3) : randomGaussian(2.5, 0.4)
       points.push({ x: r * Math.cos(angle), y: r * Math.sin(angle), label })
@@ -73,7 +68,6 @@ function treePredict(x: number, y: number): 0 | 1 {
 
 function rfPredict(x: number, y: number): 0 | 1 {
   let votes = 0
-  // Simulate 5 simple trees with slightly different boundaries
   if (x + y > 0.1) votes++
   if (x > -0.2) votes++
   if (y > -0.3) votes++
@@ -83,7 +77,6 @@ function rfPredict(x: number, y: number): 0 | 1 {
 }
 
 function neuralPredict(x: number, y: number): 0 | 1 {
-  // Simulate a neural network with nonlinear decision boundary
   const h1 = Math.tanh(x * 1.5 + y * 0.5 - 0.3)
   const h2 = Math.tanh(-x * 0.5 + y * 1.5 + 0.2)
   const h3 = Math.tanh(x * x * 0.5 + y * y * 0.5 - 2)
@@ -142,9 +135,16 @@ const MODELS: {
   },
 ]
 
+const RADAR_COLORS: Record<ModelType, string> = {
+  linear: "#4A8FE8",
+  tree: "#1DB981",
+  randomForest: "#E8A530",
+  neural: "#E8593A",
+}
+
 function Stars({ count }: { count: number }) {
   return (
-    <span className="text-yellow-500">
+    <span className="text-[#E8A530]">
       {Array.from({ length: 5 }, (_, i) => (
         <span key={i} className={i < count ? "" : "opacity-20"}>
           ★
@@ -213,17 +213,20 @@ export function InterpretabilitySim() {
       <div className="space-y-6">
         {/* Model selector */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">Selecciona un modelo</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Selecciona un modelo</h3>
           <div className="flex gap-2 flex-wrap">
             {MODELS.map((m) => (
-              <Button
+              <button
                 key={m.key}
-                variant={selectedModel === m.key ? "default" : "outline"}
-                size="sm"
+                className={`font-mono text-[11px] px-3 py-1.5 rounded border transition-colors ${
+                  selectedModel === m.key
+                    ? "bg-[#4A8FE8]/20 border-[#4A8FE8] text-[#4A8FE8]"
+                    : "bg-[#1e1e24] border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6] hover:border-[rgba(255,255,255,0.15)]"
+                }`}
                 onClick={() => setSelectedModel(m.key)}
               >
                 {m.label}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
@@ -241,23 +244,33 @@ export function InterpretabilitySim() {
 
         {/* Scatter with decision boundary */}
         <div>
-          <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2 flex items-center gap-2">
             Frontera de decision: {model.label}
-            <Badge variant="outline">Accuracy: {(accuracy * 100).toFixed(1)}%</Badge>
+            <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892]">
+              Accuracy: {(accuracy * 100).toFixed(1)}%
+            </span>
           </h3>
           <ResponsiveContainer width="100%" height={320}>
             <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="x" type="number" tick={{ fontSize: 11 }} name="X" />
-              <YAxis dataKey="y" type="number" tick={{ fontSize: 11 }} name="Y" />
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+              <XAxis dataKey="x" type="number" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} name="X" />
+              <YAxis dataKey="y" type="number" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} name="Y" />
               <ZAxis range={[15, 15]} />
-              <Tooltip />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#16161a',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: '8px',
+                  fontSize: '11px',
+                  fontFamily: 'monospace',
+                }}
+              />
               {/* Decision boundary background */}
               <Scatter data={gridPredictions} shape="square" legendType="none">
                 {gridPredictions.map((p, i) => (
                   <Cell
                     key={i}
-                    fill={p.prediction === 1 ? "#22c55e" : "#ef4444"}
+                    fill={p.prediction === 1 ? "#1DB981" : "#E8593A"}
                     fillOpacity={0.12}
                   />
                 ))}
@@ -267,7 +280,7 @@ export function InterpretabilitySim() {
                 {data.map((p, i) => (
                   <Cell
                     key={i}
-                    fill={p.label === 1 ? "#16a34a" : "#dc2626"}
+                    fill={p.label === 1 ? "#1DB981" : "#E8593A"}
                     fillOpacity={0.85}
                   />
                 ))}
@@ -278,92 +291,94 @@ export function InterpretabilitySim() {
 
         {/* Model info panel */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-lg bg-muted/50 space-y-3">
-            <h3 className="text-sm font-semibold">Propiedades del modelo</h3>
-            <div className="space-y-2 text-sm">
+          <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-3">
+            <h3 className="text-[13px] font-medium text-[#e2e2e6]">Propiedades del modelo</h3>
+            <div className="space-y-2 text-[11px] font-mono">
               <div className="flex justify-between">
-                <span>Accuracy:</span>
-                <span className="font-mono">{(accuracy * 100).toFixed(1)}%</span>
+                <span className="text-[#888892]">Accuracy:</span>
+                <span className="text-[#e2e2e6]">{(accuracy * 100).toFixed(1)}%</span>
               </div>
               <div className="flex justify-between items-center">
-                <span>Interpretabilidad:</span>
+                <span className="text-[#888892]">Interpretabilidad:</span>
                 <Stars count={model.interpretability} />
               </div>
               <div className="flex justify-between items-center">
-                <span>Velocidad:</span>
+                <span className="text-[#888892]">Velocidad:</span>
                 <Stars count={model.speed} />
               </div>
               <div className="flex justify-between items-center">
-                <span>Robustez:</span>
+                <span className="text-[#888892]">Robustez:</span>
                 <Stars count={model.robustness} />
               </div>
             </div>
           </div>
 
-          <div className="p-4 rounded-lg bg-muted/50 space-y-2">
-            <h3 className="text-sm font-semibold">
-              ¿Se lo puedes explicar a un gerente?
+          <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-2">
+            <h3 className="text-[13px] font-medium text-[#e2e2e6]">
+              Se lo puedes explicar a un gerente?
             </h3>
-            <Badge
-              className={
+            <span
+              className={`inline-block font-mono text-[10px] px-2 py-1 rounded border ${
                 model.interpretability >= 4
-                  ? "bg-emerald-500"
+                  ? "bg-[#1DB981]/15 border-[#1DB981]/20 text-[#1DB981]"
                   : model.interpretability >= 2
-                  ? "bg-yellow-500 text-black"
-                  : "bg-red-500"
-              }
+                  ? "bg-[#E8A530]/15 border-[#E8A530]/20 text-[#E8A530]"
+                  : "bg-[#E8593A]/15 border-[#E8593A]/20 text-[#E8593A]"
+              }`}
             >
               {model.interpretability >= 4
                 ? "Si, facilmente"
                 : model.interpretability >= 2
                 ? "Parcialmente"
                 : "Muy dificil"}
-            </Badge>
-            <p className="text-sm text-muted-foreground">{model.explanation}</p>
+            </span>
+            <p className="text-[11px] text-[#888892] font-mono">{model.explanation}</p>
           </div>
         </div>
 
         {/* Radar chart */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">Comparativa de modelos</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Comparativa de modelos</h3>
           <ResponsiveContainer width="100%" height={300}>
             <RadarChart data={radarData} outerRadius="70%">
-              <PolarGrid />
-              <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11 }} />
-              <PolarRadiusAxis domain={[0, 5]} tick={{ fontSize: 10 }} />
+              <PolarGrid stroke="#1e1e24" />
+              <PolarAngleAxis dataKey="metric" tick={{ fill: '#888892', fontSize: 10 }} />
+              <PolarRadiusAxis domain={[0, 5]} tick={{ fill: '#484852', fontSize: 10 }} />
               <Radar
                 name="Lineal"
                 dataKey="linear"
-                stroke="#3b82f6"
-                fill="#3b82f6"
+                stroke={RADAR_COLORS.linear}
+                fill={RADAR_COLORS.linear}
                 fillOpacity={selectedModel === "linear" ? 0.3 : 0.05}
                 strokeWidth={selectedModel === "linear" ? 2.5 : 1}
               />
               <Radar
                 name="Arbol"
                 dataKey="tree"
-                stroke="#22c55e"
-                fill="#22c55e"
+                stroke={RADAR_COLORS.tree}
+                fill={RADAR_COLORS.tree}
                 fillOpacity={selectedModel === "tree" ? 0.3 : 0.05}
                 strokeWidth={selectedModel === "tree" ? 2.5 : 1}
               />
               <Radar
                 name="Random Forest"
                 dataKey="randomForest"
-                stroke="#f59e0b"
-                fill="#f59e0b"
+                stroke={RADAR_COLORS.randomForest}
+                fill={RADAR_COLORS.randomForest}
                 fillOpacity={selectedModel === "randomForest" ? 0.3 : 0.05}
                 strokeWidth={selectedModel === "randomForest" ? 2.5 : 1}
               />
               <Radar
                 name="Red Neuronal"
                 dataKey="neural"
-                stroke="#ef4444"
-                fill="#ef4444"
+                stroke={RADAR_COLORS.neural}
+                fill={RADAR_COLORS.neural}
                 fillOpacity={selectedModel === "neural" ? 0.3 : 0.05}
                 strokeWidth={selectedModel === "neural" ? 2.5 : 1}
               />
-              <Legend />
+              <Legend
+                wrapperStyle={{ fontSize: '10px', fontFamily: 'monospace' }}
+              />
             </RadarChart>
           </ResponsiveContainer>
         </div>

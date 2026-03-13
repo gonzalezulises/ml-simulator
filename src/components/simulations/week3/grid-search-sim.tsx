@@ -14,8 +14,6 @@ import {
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { buildTree, predictTree } from "@/lib/ml/decision-tree"
 
 const DEPTH_OPTIONS = [1, 2, 3, 5, 10]
@@ -197,12 +195,13 @@ export function GridSearchSim() {
     : 100
 
   const getColor = (acc: number, isBest: boolean) => {
-    if (isBest) return "#f59e0b"
+    if (isBest) return "#E8A530"
     const range = maxAcc - minAcc || 1
     const ratio = (acc - minAcc) / range
-    const r = Math.round(255 * (1 - ratio))
-    const g = Math.round(180 * ratio + 60)
-    const b = Math.round(80 * ratio + 60)
+    // Interpolate from ml-coral (#E8593A) to ml-green (#1DB981)
+    const r = Math.round(232 + (29 - 232) * ratio)
+    const g = Math.round(89 + (185 - 89) * ratio)
+    const b = Math.round(58 + (129 - 58) * ratio)
     return `rgb(${r}, ${g}, ${b})`
   }
 
@@ -214,18 +213,18 @@ export function GridSearchSim() {
       <div className="space-y-6">
         <div className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Max Depth</label>
+            <label className="font-mono text-[11px] text-[#888892]">Max Depth</label>
             <div className="flex flex-wrap gap-2">
               {DEPTH_OPTIONS.map((d) => (
                 <label
                   key={d}
-                  className="flex items-center gap-1.5 text-sm cursor-pointer"
+                  className="flex items-center gap-1.5 font-mono text-[11px] text-[#888892] cursor-pointer hover:text-[#e2e2e6] transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={selectedDepths.includes(d)}
                     onChange={() => toggleDepth(d)}
-                    className="rounded"
+                    className="rounded accent-ml-green"
                   />
                   {d}
                 </label>
@@ -234,18 +233,18 @@ export function GridSearchSim() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Min Samples</label>
+            <label className="font-mono text-[11px] text-[#888892]">Min Samples</label>
             <div className="flex flex-wrap gap-2">
               {MIN_SAMPLES_OPTIONS.map((m) => (
                 <label
                   key={m}
-                  className="flex items-center gap-1.5 text-sm cursor-pointer"
+                  className="flex items-center gap-1.5 font-mono text-[11px] text-[#888892] cursor-pointer hover:text-[#e2e2e6] transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={selectedMinSamples.includes(m)}
                     onChange={() => toggleMinSamples(m)}
-                    className="rounded"
+                    className="rounded accent-ml-green"
                   />
                   {m}
                 </label>
@@ -265,13 +264,14 @@ export function GridSearchSim() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button
+          <button
+            className="px-4 py-2 rounded text-[11px] font-mono font-medium transition-colors bg-ml-green text-[#0f0f11] hover:bg-ml-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={runGridSearch}
             disabled={isRunning || totalCombinations === 0}
           >
             {isRunning ? "Buscando..." : "Ejecutar Grid Search"}
-          </Button>
-          <span className="text-sm text-muted-foreground">
+          </button>
+          <span className="font-mono text-[11px] text-[#888892]">
             {totalCombinations} combinaciones
             {totalCombinations > 0 && ` × ${cvK}-fold CV = ${totalCombinations * cvK} entrenamientos`}
           </span>
@@ -279,13 +279,13 @@ export function GridSearchSim() {
 
         {(isRunning || results.length > 0) && (
           <div className="space-y-1">
-            <div className="flex justify-between text-xs text-muted-foreground">
+            <div className="flex justify-between font-mono text-[10px] text-[#888892]">
               <span>Progreso</span>
               <span>{Math.round(progress)}%</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+            <div className="h-2 w-full rounded-full bg-[#1e1e24] overflow-hidden">
               <div
-                className="h-full rounded-full bg-chart-1 transition-all duration-200"
+                className="h-full rounded-full bg-ml-green transition-all duration-200"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -295,29 +295,32 @@ export function GridSearchSim() {
         {results.length > 0 && (
           <>
             <div className="space-y-2">
-              <p className="text-sm font-medium">Mapa de calor de resultados</p>
+              <p className="font-mono text-[11px] text-[#888892]">Mapa de calor de resultados</p>
               <ResponsiveContainer width="100%" height={280}>
                 <ScatterChart margin={{ top: 10, right: 30, bottom: 30, left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
                   <XAxis
                     dataKey="depth"
                     type="number"
                     name="Max Depth"
                     domain={[0, 12]}
-                    tick={{ fontSize: 11 }}
-                    label={{ value: "Max Depth", position: "insideBottom", offset: -10, fontSize: 11 }}
+                    stroke="#484852"
+                    tick={{ fill: '#888892', fontSize: 10 }}
+                    label={{ value: "Max Depth", position: "insideBottom", offset: -10, fontSize: 10, fill: '#888892' }}
                   />
                   <YAxis
                     dataKey="minSamples"
                     type="number"
                     name="Min Samples"
                     domain={[0, 25]}
-                    tick={{ fontSize: 11 }}
-                    label={{ value: "Min Samples", angle: -90, position: "insideLeft", fontSize: 11 }}
+                    stroke="#484852"
+                    tick={{ fill: '#888892', fontSize: 10 }}
+                    label={{ value: "Min Samples", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
                   />
                   <ZAxis dataKey="accuracy" range={[200, 600]} name="Accuracy %" />
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   <Tooltip
+                    contentStyle={{ backgroundColor: '#16161a', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}
+                    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
                     formatter={(value: any, name: any) => [
                       name === "Accuracy %" ? `${value}%` : value,
                       name,
@@ -328,41 +331,43 @@ export function GridSearchSim() {
                       <Cell
                         key={i}
                         fill={getColor(entry.accuracy, entry.isBest)}
-                        stroke={entry.isBest ? "#f59e0b" : "#666"}
+                        stroke={entry.isBest ? "#E8A530" : "#484852"}
                         strokeWidth={entry.isBest ? 3 : 1}
                       />
                     ))}
                   </Scatter>
                 </ScatterChart>
               </ResponsiveContainer>
-              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                <span className="inline-block w-3 h-3 rounded bg-red-400" /> Menor accuracy
-                <span className="mx-1">→</span>
-                <span className="inline-block w-3 h-3 rounded bg-green-500" /> Mayor accuracy
-                <span className="mx-1">|</span>
-                <span className="inline-block w-3 h-3 rounded border-2 border-amber-500 bg-amber-400" /> Mejor
+              <div className="flex items-center justify-center gap-2 font-mono text-[10px] text-[#888892]">
+                <span className="inline-block w-3 h-3 rounded bg-ml-coral" /> Menor accuracy
+                <span className="mx-1 text-[#484852]">&rarr;</span>
+                <span className="inline-block w-3 h-3 rounded bg-ml-green" /> Mayor accuracy
+                <span className="mx-1 text-[#484852]">|</span>
+                <span className="inline-block w-3 h-3 rounded border-2 border-ml-amber bg-ml-amber" /> Mejor
               </div>
             </div>
 
             {best && !isRunning && (
-              <div className="rounded-lg border-2 border-amber-500 bg-amber-50 dark:bg-amber-950/20 p-4 space-y-2">
+              <div className="rounded-lg border border-ml-amber/30 bg-ml-amber/5 p-4 space-y-2">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium">Mejor modelo encontrado</p>
-                  <Badge className="bg-amber-500">Ganador</Badge>
+                  <p className="font-mono text-[11px] text-[#888892]">Mejor modelo encontrado</p>
+                  <span className="font-mono text-[10px] px-2 py-1 rounded bg-ml-amber text-[#0f0f11] font-medium">
+                    Ganador
+                  </span>
                 </div>
-                <div className="grid grid-cols-3 gap-4 font-mono text-sm">
+                <div className="grid grid-cols-3 gap-4 font-mono text-[11px]">
                   <div>
-                    <p className="text-xs text-muted-foreground">Max Depth</p>
-                    <p className="text-lg font-bold">{best.depth}</p>
+                    <p className="text-[10px] text-[#484852]">Max Depth</p>
+                    <p className="text-lg font-bold text-[#e2e2e6]">{best.depth}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Min Samples</p>
-                    <p className="text-lg font-bold">{best.minSamples}</p>
+                    <p className="text-[10px] text-[#484852]">Min Samples</p>
+                    <p className="text-lg font-bold text-[#e2e2e6]">{best.minSamples}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Accuracy (CV)</p>
-                    <p className="text-lg font-bold">
-                      {(best.mean * 100).toFixed(1)}% <span className="text-sm font-normal">± {(best.std * 100).toFixed(1)}%</span>
+                    <p className="text-[10px] text-[#484852]">Accuracy (CV)</p>
+                    <p className="text-lg font-bold text-[#e2e2e6]">
+                      {(best.mean * 100).toFixed(1)}% <span className="text-[11px] font-normal text-[#888892]">± {(best.std * 100).toFixed(1)}%</span>
                     </p>
                   </div>
                 </div>
@@ -371,30 +376,32 @@ export function GridSearchSim() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Tabla de resultados</p>
+                <p className="font-mono text-[11px] text-[#888892]">Tabla de resultados</p>
                 <div className="flex gap-1">
                   {(["mean", "depth", "minSamples"] as const).map((key) => (
-                    <Button
+                    <button
                       key={key}
-                      variant={sortBy === key ? "default" : "outline"}
-                      size="sm"
+                      className={`px-2 py-1 rounded text-[10px] font-mono transition-colors ${
+                        sortBy === key
+                          ? "bg-ml-green text-[#0f0f11]"
+                          : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
+                      }`}
                       onClick={() => setSortBy(key)}
-                      className="text-xs h-7"
                     >
                       {key === "mean" ? "Accuracy" : key === "depth" ? "Depth" : "Min Samples"}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
-              <div className="overflow-x-auto rounded-md border max-h-[250px] overflow-y-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted/50 sticky top-0">
+              <div className="overflow-x-auto rounded-md border border-[rgba(255,255,255,0.07)] max-h-[250px] overflow-y-auto">
+                <table className="w-full text-[11px] font-mono">
+                  <thead className="bg-[#1e1e24] sticky top-0">
                     <tr>
-                      <th className="px-3 py-1.5 text-left text-xs font-medium">#</th>
-                      <th className="px-3 py-1.5 text-left text-xs font-medium">Max Depth</th>
-                      <th className="px-3 py-1.5 text-left text-xs font-medium">Min Samples</th>
-                      <th className="px-3 py-1.5 text-left text-xs font-medium">Accuracy (media)</th>
-                      <th className="px-3 py-1.5 text-left text-xs font-medium">Accuracy (std)</th>
+                      <th className="px-3 py-1.5 text-left text-[10px] text-[#484852] font-medium">#</th>
+                      <th className="px-3 py-1.5 text-left text-[10px] text-[#484852] font-medium">Max Depth</th>
+                      <th className="px-3 py-1.5 text-left text-[10px] text-[#484852] font-medium">Min Samples</th>
+                      <th className="px-3 py-1.5 text-left text-[10px] text-[#484852] font-medium">Accuracy (media)</th>
+                      <th className="px-3 py-1.5 text-left text-[10px] text-[#484852] font-medium">Accuracy (std)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -406,19 +413,19 @@ export function GridSearchSim() {
                       return (
                         <tr
                           key={`${r.depth}-${r.minSamples}`}
-                          className={`border-t ${
+                          className={`border-t border-[rgba(255,255,255,0.07)] ${
                             isBest
-                              ? "bg-amber-50 dark:bg-amber-950/20 font-semibold"
-                              : "hover:bg-muted/30"
+                              ? "bg-ml-amber/5 text-ml-amber"
+                              : "text-[#888892] hover:bg-[#1e1e24]/50"
                           }`}
                         >
-                          <td className="px-3 py-1.5 font-mono text-xs">{i + 1}</td>
-                          <td className="px-3 py-1.5 font-mono">{r.depth}</td>
-                          <td className="px-3 py-1.5 font-mono">{r.minSamples}</td>
-                          <td className="px-3 py-1.5 font-mono">
+                          <td className="px-3 py-1.5 text-[10px]">{i + 1}</td>
+                          <td className="px-3 py-1.5">{r.depth}</td>
+                          <td className="px-3 py-1.5">{r.minSamples}</td>
+                          <td className="px-3 py-1.5">
                             {(r.mean * 100).toFixed(1)}%
                           </td>
-                          <td className="px-3 py-1.5 font-mono">
+                          <td className="px-3 py-1.5">
                             {(r.std * 100).toFixed(1)}%
                           </td>
                         </tr>
@@ -431,7 +438,7 @@ export function GridSearchSim() {
           </>
         )}
 
-        <p className="text-xs text-muted-foreground">
+        <p className="font-mono text-[10px] text-[#484852]">
           Grid Search evalúa exhaustivamente todas las combinaciones de hiperparámetros.
           Cada combinación se evalúa con {cvK}-fold CV para obtener una estimación confiable.
           El costo crece exponencialmente con cada hiperparámetro adicional.

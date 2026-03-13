@@ -1,85 +1,121 @@
 "use client"
 
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Button } from "@/components/ui/button"
 import { Brain, TreePine, FileText, ArrowRight } from "lucide-react"
 import { weeks } from "@/lib/content/weeks"
 import { useProgress } from "@/hooks/use-progress"
 
 const weekIcons = [Brain, TreePine, FileText]
+const weekColors = ["ml-green", "ml-blue", "ml-purple"]
 
 export default function HomePage() {
   const { getWeekProgress } = useProgress()
 
   return (
-    <main className="container mx-auto px-4 py-12">
-      <div className="max-w-4xl mx-auto space-y-12">
+    <main className="px-6 py-16">
+      <div className="max-w-4xl mx-auto space-y-16">
+        {/* Hero */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            ML Simulator
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ml-green">
+            simulador interactivo
+          </p>
+          <h1 className="text-3xl sm:text-4xl font-medium tracking-tight">
+            Machine Learning
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Aprende Machine Learning de forma interactiva. Ajusta parámetros, observa
-            cómo cambian los modelos en tiempo real y verifica tu comprensión.
+          <p className="text-[14px] text-[#888892] max-w-xl mx-auto leading-relaxed">
+            Aprende ajustando parámetros y observando cómo cambian los modelos en tiempo real.
+            15 simulaciones interactivas, teoría concisa y verificación de conocimiento.
           </p>
         </div>
 
-        <div className="grid gap-6">
+        {/* Stats bar */}
+        <div className="flex items-center justify-center gap-8 font-mono text-[11px]">
+          <div className="text-center">
+            <p className="text-foreground font-medium text-lg">15</p>
+            <p className="text-[#484852]">simulaciones</p>
+          </div>
+          <div className="h-8 w-px bg-[rgba(255,255,255,0.07)]" />
+          <div className="text-center">
+            <p className="text-foreground font-medium text-lg">3</p>
+            <p className="text-[#484852]">semanas</p>
+          </div>
+          <div className="h-8 w-px bg-[rgba(255,255,255,0.07)]" />
+          <div className="text-center">
+            <p className="text-foreground font-medium text-lg">45</p>
+            <p className="text-[#484852]">preguntas</p>
+          </div>
+        </div>
+
+        {/* Week cards */}
+        <div className="grid gap-4">
           {weeks.map((week) => {
             const Icon = weekIcons[week.id - 1]
             const progress = getWeekProgress(week.id)
+            const colorClass = weekColors[week.id - 1]
+
             return (
-              <Card key={week.id} className="overflow-hidden">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
+              <div
+                key={week.id}
+                className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a] overflow-hidden"
+              >
+                <div className="p-5">
+                  <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                        <Icon className="h-5 w-5" />
+                      <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-${colorClass}/10`}>
+                        <Icon className={`h-4 w-4 text-${colorClass}`} />
                       </div>
                       <div>
-                        <CardTitle>Semana {week.id}</CardTitle>
-                        <CardDescription className="mt-1">{week.title}</CardDescription>
+                        <p className="font-mono text-[10px] text-[#484852] uppercase tracking-wider">
+                          Semana {week.id}
+                        </p>
+                        <h2 className="text-[14px] font-medium">{week.title}</h2>
                       </div>
                     </div>
-                    <Badge variant={progress === 100 ? "default" : "outline"}>
-                      {progress}%
-                    </Badge>
+                    <span className="font-mono text-[10px] text-[#484852]">{progress}%</span>
                   </div>
-                  <Progress value={progress} className="mt-3" />
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">{week.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
+
+                  {/* Progress bar */}
+                  <div className="h-[3px] rounded-full bg-[#1e1e24] mb-4">
+                    <div
+                      className={`h-full rounded-full bg-${colorClass} transition-all`}
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+
+                  <p className="text-[12px] text-[#888892] mb-4 leading-relaxed">
+                    {week.description}
+                  </p>
+
+                  {/* Module tags */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
                     {week.modules.map((m) => (
-                      <Link key={m.id} href={`/semana/${week.id}/${m.slug}`}>
-                        <Badge
-                          variant="secondary"
-                          className="cursor-pointer hover:bg-secondary/80"
-                        >
-                          {m.title}
-                        </Badge>
+                      <Link
+                        key={m.id}
+                        href={`/semana/${week.id}/${m.slug}`}
+                        className="font-mono text-[10px] px-2 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-foreground hover:border-[rgba(255,255,255,0.15)] transition-colors"
+                      >
+                        {m.title}
                       </Link>
                     ))}
                   </div>
-                  <Link href={`/semana/${week.id}`}>
-                    <Button variant="outline" size="sm">
-                      Comenzar semana {week.id}
-                      <ArrowRight className="ml-1 h-4 w-4" />
-                    </Button>
+
+                  <Link
+                    href={`/semana/${week.id}`}
+                    className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ml-green hover:text-ml-green/80 transition-colors"
+                  >
+                    Comenzar semana {week.id}
+                    <ArrowRight className="h-3 w-3" />
                   </Link>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             )
           })}
         </div>
 
-        <div className="text-center text-sm text-muted-foreground">
+        {/* Footer */}
+        <div className="text-center font-mono text-[10px] text-[#484852]">
           <p>
-            15 simulaciones interactivas que cubren perceptrón, árboles de decisión,
-            random forest, regresión logística y NLP.
+            Perceptrón · Árboles de decisión · Random Forest · Regresión logística · NLP
           </p>
         </div>
       </div>

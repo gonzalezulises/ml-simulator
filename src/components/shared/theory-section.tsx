@@ -1,5 +1,4 @@
 import { ReactNode } from "react"
-import { Badge } from "@/components/ui/badge"
 
 export function TheorySection({
   title,
@@ -13,18 +12,24 @@ export function TheorySection({
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-        {concepts && concepts.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-2">
-            {concepts.map((c) => (
-              <Badge key={c} variant="secondary">
-                {c}
-              </Badge>
-            ))}
-          </div>
-        )}
+        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#484852] mb-2">
+          conceptos clave
+        </p>
+        <h2 className="text-lg font-medium tracking-tight">{title}</h2>
       </div>
-      <div className="prose prose-zinc max-w-none dark:prose-invert text-muted-foreground leading-relaxed">
+      {concepts && concepts.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {concepts.map((c) => (
+            <span
+              key={c}
+              className="inline-block font-mono text-[10px] px-2 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892]"
+            >
+              {c}
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="text-[13px] text-[#888892] leading-[1.8] space-y-3 [&_strong]:text-foreground [&_strong]:font-medium [&_code]:font-mono [&_code]:text-ml-green [&_code]:text-[12px] [&_code]:bg-[#1e1e24] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_ul]:space-y-1.5 [&_ul]:list-none [&_ul]:pl-0 [&_li]:before:content-['→'] [&_li]:before:text-[#484852] [&_li]:before:mr-2 [&_em]:text-ml-amber [&_em]:not-italic">
         {children}
       </div>
     </section>

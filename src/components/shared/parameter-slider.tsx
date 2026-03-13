@@ -1,6 +1,5 @@
 "use client"
 
-import { Slider } from "@/components/ui/slider"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Info } from "lucide-react"
 
@@ -26,33 +25,32 @@ export function ParameterSlider({
   const displayValue = formatValue ? formatValue(value) : value.toString()
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <label className="text-sm font-medium flex items-center gap-1">
-          {label}
-          {tooltip && (
-            <Tooltip>
-              <TooltipTrigger className="inline-flex">
-                <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-              </TooltipTrigger>
-              <TooltipContent className="max-w-xs">
-                <p>{tooltip}</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
-        </label>
-        <span className="text-sm font-mono text-muted-foreground">{displayValue}</span>
-      </div>
-      <Slider
-        value={[value]}
+    <div className="flex items-center gap-3">
+      <span className="font-mono text-[11px] text-[#888892] min-w-[130px] flex items-center gap-1">
+        {label}
+        {tooltip && (
+          <Tooltip>
+            <TooltipTrigger className="inline-flex">
+              <Info className="h-3 w-3 text-[#484852] cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent className="max-w-xs text-[11px]">
+              <p>{tooltip}</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </span>
+      <input
+        type="range"
         min={min}
         max={max}
         step={step}
-        onValueChange={(val) => {
-          const arr = Array.isArray(val) ? val : [val]
-          onChange(arr[0] as number)
-        }}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="flex-1 h-1 bg-[#26262e] rounded-sm appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[13px] [&::-webkit-slider-thumb]:h-[13px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-ml-green [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#0f0f11] [&::-webkit-slider-thumb]:cursor-pointer"
       />
+      <span className="font-mono text-[11px] font-medium min-w-[44px] text-right">
+        {displayValue}
+      </span>
     </div>
   )
 }

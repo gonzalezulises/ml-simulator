@@ -15,8 +15,6 @@ import {
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
-import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
 import { generatePolynomialData } from "@/lib/ml/data-generators"
 
 // Polynomial regression via normal equations
@@ -161,9 +159,9 @@ export function OverfittingSim() {
     }, [complexity, noise, trainSize])
 
   const statusConfig = {
-    underfitting: { label: "Sub-ajuste", variant: "destructive" as const },
-    optimal: { label: "Optimo", variant: "default" as const },
-    overfitting: { label: "Sobre-ajuste", variant: "destructive" as const },
+    underfitting: { label: "Sub-ajuste", color: "text-[#E8593A]", bg: "bg-[#E8593A]/15" },
+    optimal: { label: "Optimo", color: "text-[#1DB981]", bg: "bg-[#1DB981]/15" },
+    overfitting: { label: "Sobre-ajuste", color: "text-[#E8593A]", bg: "bg-[#E8593A]/15" },
   }
 
   const cfg = statusConfig[status]
@@ -207,31 +205,66 @@ export function OverfittingSim() {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Switch checked={showTest} onCheckedChange={setShowTest} />
-            <label className="text-sm">Mostrar datos de prueba</label>
+            <button
+              onClick={() => setShowTest(!showTest)}
+              className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-[rgba(255,255,255,0.07)] transition-colors ${
+                showTest ? "bg-[#1DB981]" : "bg-[#1e1e24]"
+              }`}
+            >
+              <span
+                className={`inline-block h-3.5 w-3.5 rounded-full bg-[#e2e2e6] transition-transform ${
+                  showTest ? "translate-x-4" : "translate-x-0.5"
+                }`}
+              />
+            </button>
+            <label className="text-[11px] font-mono text-[#888892]">Mostrar datos de prueba</label>
           </div>
-          <Badge variant={cfg.variant}>{cfg.label}</Badge>
+          <span
+            className={`font-mono text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${cfg.bg} ${cfg.color}`}
+          >
+            {cfg.label}
+          </span>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div>
-            <h4 className="text-sm font-medium mb-2">Datos y modelo ajustado</h4>
+            <h4 className="text-[11px] font-mono text-[#888892] mb-2">Datos y modelo ajustado</h4>
             <ResponsiveContainer width="100%" height={300}>
               <ScatterChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="x" domain={[-3.5, 3.5]} />
-                <YAxis type="number" dataKey="y" domain={[-3, 3]} />
-                <Tooltip />
+                <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+                <XAxis
+                  type="number"
+                  dataKey="x"
+                  domain={[-3.5, 3.5]}
+                  stroke="#484852"
+                  tick={{ fill: "#888892", fontSize: 10 }}
+                />
+                <YAxis
+                  type="number"
+                  dataKey="y"
+                  domain={[-3, 3]}
+                  stroke="#484852"
+                  tick={{ fill: "#888892", fontSize: 10 }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#16161a",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                    borderRadius: "8px",
+                    fontSize: "11px",
+                    fontFamily: "monospace",
+                  }}
+                />
                 <Scatter
                   name="Entrenamiento"
                   data={trainData}
-                  fill="hsl(221, 83%, 53%)"
+                  fill="#4A8FE8"
                 />
                 {showTest && (
                   <Scatter
                     name="Prueba"
                     data={testData}
-                    fill="hsl(0, 84%, 60%)"
+                    fill="#E8593A"
                     opacity={0.6}
                   />
                 )}
@@ -239,7 +272,7 @@ export function OverfittingSim() {
                   name={`Polinomio grado ${complexity}`}
                   data={curvePoints}
                   fill="none"
-                  line={{ stroke: "hsl(142, 71%, 45%)", strokeWidth: 2 }}
+                  line={{ stroke: "#1DB981", strokeWidth: 2 }}
                   lineType="joint"
                   legendType="line"
                   shape={() => null}
@@ -249,62 +282,80 @@ export function OverfittingSim() {
           </div>
 
           <div>
-            <h4 className="text-sm font-medium mb-2">Error vs Complejidad</h4>
+            <h4 className="text-[11px] font-mono text-[#888892] mb-2">Error vs Complejidad</h4>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart
                 data={errorCurve}
                 margin={{ top: 10, right: 20, bottom: 10, left: 10 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
                 <XAxis
                   dataKey="grado"
+                  stroke="#484852"
+                  tick={{ fill: "#888892", fontSize: 10 }}
                   label={{
                     value: "Grado del polinomio",
                     position: "insideBottom",
                     offset: -5,
+                    fill: "#484852",
+                    fontSize: 10,
                   }}
                 />
                 <YAxis
+                  stroke="#484852"
+                  tick={{ fill: "#888892", fontSize: 10 }}
                   label={{
                     value: "MSE",
                     angle: -90,
                     position: "insideLeft",
                     offset: 10,
+                    fill: "#484852",
+                    fontSize: 10,
                   }}
                 />
-                <Tooltip />
-                <Legend />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#16161a",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                    borderRadius: "8px",
+                    fontSize: "11px",
+                    fontFamily: "monospace",
+                  }}
+                />
+                <Legend
+                  wrapperStyle={{ fontSize: "10px", fontFamily: "monospace" }}
+                />
                 <Line
                   type="monotone"
                   dataKey="entrenamiento"
-                  stroke="hsl(221, 83%, 53%)"
+                  stroke="#4A8FE8"
                   strokeWidth={2}
                   name="Error entrenamiento"
-                  dot={{ r: 3 }}
+                  dot={{ r: 3, fill: "#4A8FE8" }}
                 />
                 <Line
                   type="monotone"
                   dataKey="prueba"
-                  stroke="hsl(0, 84%, 60%)"
+                  stroke="#E8593A"
                   strokeWidth={2}
                   name="Error prueba"
-                  dot={{ r: 3 }}
+                  dot={{ r: 3, fill: "#E8593A" }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-lg border p-3 grid grid-cols-2 gap-4 text-sm">
+        <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 grid grid-cols-2 gap-4 text-[11px] font-mono">
           <div className="text-center">
-            <p className="text-muted-foreground">Error entrenamiento</p>
-            <p className="text-lg font-mono font-bold">
+            <p className="text-[#888892]">Error entrenamiento</p>
+            <p className="text-[16px] font-bold text-[#e2e2e6] mt-1">
               {trainError.toFixed(4)}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-muted-foreground">Error prueba</p>
-            <p className="text-lg font-mono font-bold">{testError.toFixed(4)}</p>
+            <p className="text-[#888892]">Error prueba</p>
+            <p className="text-[16px] font-bold text-[#e2e2e6] mt-1">{testError.toFixed(4)}</p>
           </div>
         </div>
       </div>

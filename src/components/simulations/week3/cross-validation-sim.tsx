@@ -14,8 +14,6 @@ import {
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 
 function seededRandom(seed: number) {
   let s = seed
@@ -240,56 +238,62 @@ export function CrossValidationSim() {
             }}
           />
           <div className="space-y-2">
-            <label className="text-sm font-medium">Modelo</label>
+            <label className="font-mono text-[11px] text-[#888892]">Modelo</label>
             <div className="flex gap-2">
-              <Button
-                variant={model === "linear" ? "default" : "outline"}
-                size="sm"
+              <button
+                className={`px-3 py-1.5 rounded text-[11px] font-mono transition-colors ${
+                  model === "linear"
+                    ? "bg-ml-green text-[#0f0f11]"
+                    : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
+                }`}
                 onClick={() => {
                   setModel("linear")
                   setFoldResults([])
                 }}
               >
                 Lineal
-              </Button>
-              <Button
-                variant={model === "tree" ? "default" : "outline"}
-                size="sm"
+              </button>
+              <button
+                className={`px-3 py-1.5 rounded text-[11px] font-mono transition-colors ${
+                  model === "tree"
+                    ? "bg-ml-green text-[#0f0f11]"
+                    : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
+                }`}
                 onClick={() => {
                   setModel("tree")
                   setFoldResults([])
                 }}
               >
                 Árbol
-              </Button>
+              </button>
             </div>
           </div>
         </div>
 
         <div className="space-y-2">
-          <p className="text-sm font-medium">Diagrama de folds</p>
-          <div className="flex gap-0.5 h-10 rounded-md overflow-hidden border">
+          <p className="font-mono text-[11px] text-[#888892]">Diagrama de folds</p>
+          <div className="flex gap-0.5 h-10 rounded-md overflow-hidden border border-[rgba(255,255,255,0.07)]">
             {Array.from({ length: k }, (_, i) => (
               <div
                 key={i}
-                className={`flex-1 flex items-center justify-center text-xs font-medium transition-colors duration-300 ${
+                className={`flex-1 flex items-center justify-center text-[10px] font-mono font-medium transition-colors duration-300 ${
                   i === activeFold
-                    ? "bg-red-500 text-white"
+                    ? "bg-ml-coral text-white"
                     : foldResults.length > i && activeFold === -1
-                    ? "bg-blue-400 text-white"
-                    : "bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
+                    ? "bg-ml-blue text-white"
+                    : "bg-[#1e1e24] text-[#888892]"
                 }`}
               >
                 {i === activeFold ? "Test" : `F${i + 1}`}
               </div>
             ))}
           </div>
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4 text-[10px] text-[#888892] font-mono">
             <span className="flex items-center gap-1">
-              <span className="inline-block w-3 h-3 rounded bg-blue-400" /> Entrenamiento
+              <span className="inline-block w-3 h-3 rounded bg-ml-blue" /> Entrenamiento
             </span>
             <span className="flex items-center gap-1">
-              <span className="inline-block w-3 h-3 rounded bg-red-500" /> Test
+              <span className="inline-block w-3 h-3 rounded bg-ml-coral" /> Test
             </span>
             <span>
               Cada fold: {Math.floor(datasetSize / k)} muestras de test,{" "}
@@ -299,11 +303,15 @@ export function CrossValidationSim() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button onClick={runCV} disabled={isRunning}>
+          <button
+            className="px-4 py-2 rounded text-[11px] font-mono font-medium transition-colors bg-ml-green text-[#0f0f11] hover:bg-ml-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={runCV}
+            disabled={isRunning}
+          >
             {isRunning ? "Ejecutando..." : "Ejecutar CV"}
-          </Button>
+          </button>
           {isRunning && (
-            <span className="text-sm text-muted-foreground">
+            <span className="text-[11px] font-mono text-[#888892]">
               Fold {activeFold + 1} de {k}...
             </span>
           )}
@@ -313,32 +321,36 @@ export function CrossValidationSim() {
           <>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+                <XAxis dataKey="name" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
                 <YAxis
                   domain={[
                     Math.max(0, Math.floor((mean - std * 3) * 100)),
                     Math.min(100, Math.ceil((mean + std * 3) * 100)),
                   ]}
-                  tick={{ fontSize: 11 }}
-                  label={{ value: "Accuracy %", angle: -90, position: "insideLeft", fontSize: 11 }}
+                  stroke="#484852"
+                  tick={{ fill: '#888892', fontSize: 10 }}
+                  label={{ value: "Accuracy %", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
                 />
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                <Tooltip formatter={(v: any) => [`${v}%`, "Accuracy"]} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#16161a', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}
+                  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+                  formatter={(v: any) => [`${v}%`, "Accuracy"]}
+                />
                 {foldResults.length === k && (
                   <ReferenceLine
                     y={mean * 100}
-                    stroke="var(--chart-4)"
+                    stroke="#E8A530"
                     strokeWidth={2}
                     strokeDasharray="5 5"
-                    label={{ value: `Media: ${(mean * 100).toFixed(1)}%`, fontSize: 11 }}
+                    label={{ value: `Media: ${(mean * 100).toFixed(1)}%`, fontSize: 10, fill: '#E8A530' }}
                   />
                 )}
                 <Bar dataKey="accuracy" radius={[4, 4, 0, 0]}>
                   {chartData.map((_, i) => (
                     <Cell
                       key={i}
-                      fill={i === activeFold ? "var(--chart-4)" : "var(--chart-1)"}
+                      fill={i === activeFold ? "#E8A530" : "#1DB981"}
                     />
                   ))}
                 </Bar>
@@ -347,28 +359,32 @@ export function CrossValidationSim() {
 
             {foldResults.length === k && (
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-lg border p-4 space-y-2">
-                  <p className="text-sm font-medium">Split único (80/20)</p>
-                  <p className="text-2xl font-bold font-mono">
+                <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-4 space-y-2">
+                  <p className="font-mono text-[11px] text-[#888892]">Split único (80/20)</p>
+                  <p className="text-2xl font-bold font-mono text-[#e2e2e6]">
                     {singleSplitAcc !== null ? `${(singleSplitAcc * 100).toFixed(1)}%` : "—"}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-[10px] font-mono text-[#484852]">
                     Un solo corte. No sabemos si este resultado es confiable.
                   </p>
                 </div>
-                <div className="rounded-lg border border-chart-1 p-4 space-y-2">
-                  <p className="text-sm font-medium">Validación cruzada ({k}-fold)</p>
-                  <p className="text-2xl font-bold font-mono">
-                    {(mean * 100).toFixed(1)}% <span className="text-base font-normal">± {(std * 100).toFixed(1)}%</span>
+                <div className="rounded-lg border border-ml-green/30 bg-ml-green/5 p-4 space-y-2">
+                  <p className="font-mono text-[11px] text-[#888892]">Validación cruzada ({k}-fold)</p>
+                  <p className="text-2xl font-bold font-mono text-[#e2e2e6]">
+                    {(mean * 100).toFixed(1)}% <span className="text-base font-normal text-[#888892]">± {(std * 100).toFixed(1)}%</span>
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-[10px] font-mono text-[#484852]">
                     Promedio de {k} evaluaciones. La desviación indica qué tan estable es el modelo.
                   </p>
                   {std > 0.1 && (
-                    <Badge variant="destructive">Alta varianza entre folds</Badge>
+                    <span className="inline-block font-mono text-[10px] px-2 py-1 rounded bg-ml-coral/10 border border-ml-coral/30 text-ml-coral">
+                      Alta varianza entre folds
+                    </span>
                   )}
                   {std <= 0.05 && (
-                    <Badge variant="secondary">Estimación estable</Badge>
+                    <span className="inline-block font-mono text-[10px] px-2 py-1 rounded bg-ml-green/10 border border-ml-green/30 text-ml-green">
+                      Estimación estable
+                    </span>
                   )}
                 </div>
               </div>
@@ -376,8 +392,8 @@ export function CrossValidationSim() {
           </>
         )}
 
-        <div className="rounded-lg border bg-muted/30 p-4">
-          <p className="text-sm">{kExplanation}</p>
+        <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-4">
+          <p className="text-[12px] font-mono text-[#888892]">{kExplanation}</p>
         </div>
       </div>
     </SimulationCard>

@@ -1,26 +1,37 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertTriangle, Eye, ShieldAlert, Lightbulb } from "lucide-react"
 
 const calloutConfig = {
   overfitting: {
     icon: AlertTriangle,
     title: "Riesgo de Sobre-ajuste",
-    className: "border-orange-500/50 bg-orange-50 dark:bg-orange-950/20",
+    color: "ml-coral",
+    borderClass: "border-ml-coral/30",
+    bgClass: "bg-ml-coral/5",
+    iconClass: "text-ml-coral",
   },
   interpretability: {
     icon: Eye,
     title: "Interpretabilidad",
-    className: "border-blue-500/50 bg-blue-50 dark:bg-blue-950/20",
+    color: "ml-blue",
+    borderClass: "border-ml-blue/30",
+    bgClass: "bg-ml-blue/5",
+    iconClass: "text-ml-blue",
   },
   leakage: {
     icon: ShieldAlert,
     title: "Data Leakage",
-    className: "border-red-500/50 bg-red-50 dark:bg-red-950/20",
+    color: "ml-purple",
+    borderClass: "border-ml-purple/30",
+    bgClass: "bg-ml-purple/5",
+    iconClass: "text-ml-purple",
   },
   "no-perfect-model": {
     icon: Lightbulb,
     title: "No existe el modelo perfecto",
-    className: "border-yellow-500/50 bg-yellow-50 dark:bg-yellow-950/20",
+    color: "ml-amber",
+    borderClass: "border-ml-amber/30",
+    bgClass: "bg-ml-amber/5",
+    iconClass: "text-ml-amber",
   },
 } as const
 
@@ -35,10 +46,18 @@ export function ConceptCallout({
   const Icon = config.icon
 
   return (
-    <Alert className={config.className}>
-      <Icon className="h-4 w-4" />
-      <AlertTitle>{config.title}</AlertTitle>
-      <AlertDescription>{children}</AlertDescription>
-    </Alert>
+    <div className={`rounded-lg border ${config.borderClass} ${config.bgClass} p-4`}>
+      <div className="flex items-start gap-3">
+        <Icon className={`h-4 w-4 mt-0.5 shrink-0 ${config.iconClass}`} />
+        <div className="space-y-1">
+          <p className={`font-mono text-[11px] font-medium ${config.iconClass}`}>
+            {config.title}
+          </p>
+          <div className="text-[12px] text-[#888892] leading-relaxed">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

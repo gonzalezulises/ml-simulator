@@ -2,16 +2,15 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Brain, BarChart3, Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Menu, X } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { href: "/semana/1", label: "Semana 1" },
-  { href: "/semana/2", label: "Semana 2" },
-  { href: "/semana/3", label: "Semana 3" },
-  { href: "/progreso", label: "Progreso" },
+  { href: "/semana/1", label: "01 / fundamentos" },
+  { href: "/semana/2", label: "02 / árboles" },
+  { href: "/semana/3", label: "03 / regresión & NLP" },
+  { href: "/progreso", label: "progreso" },
 ]
 
 export function SiteHeader() {
@@ -19,52 +18,53 @@ export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-14 items-center px-4">
-        <Link href="/" className="mr-6 flex items-center gap-2 font-bold">
-          <Brain className="h-5 w-5" />
-          <span>ML Simulator</span>
+    <header className="sticky top-0 z-50 w-full border-b border-[rgba(255,255,255,0.07)] bg-[#0f0f11]/95 backdrop-blur">
+      <div className="flex h-12 items-center px-6">
+        <Link href="/" className="mr-8 flex items-center gap-2">
+          <span className="text-[15px] font-medium tracking-tight">ML Simulator</span>
+          <span className="font-mono text-[10px] text-[#888892]">v1.0</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-0">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <Button
-                variant={pathname.startsWith(item.href) ? "secondary" : "ghost"}
-                size="sm"
-              >
-                {item.label === "Progreso" && <BarChart3 className="mr-1 h-4 w-4" />}
-                {item.label}
-              </Button>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "px-4 py-3 font-mono text-[11px] border-b-2 border-transparent transition-colors",
+                pathname.startsWith(item.href)
+                  ? "text-foreground border-b-ml-green"
+                  : "text-[#888892] hover:text-foreground"
+              )}
+            >
+              {item.label}
             </Link>
           ))}
         </nav>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden ml-auto"
+        <button
+          className="md:hidden ml-auto p-2 text-[#888892] hover:text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
+          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </button>
       </div>
 
       {mobileOpen && (
-        <nav className="md:hidden border-t p-4 flex flex-col gap-2">
+        <nav className="md:hidden border-t border-[rgba(255,255,255,0.07)] p-4 flex flex-col gap-1">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setMobileOpen(false)}
+              className={cn(
+                "px-3 py-2 rounded font-mono text-[11px] transition-colors",
+                pathname.startsWith(item.href)
+                  ? "text-foreground bg-[#1e1e24]"
+                  : "text-[#888892] hover:text-foreground"
+              )}
             >
-              <Button
-                variant={pathname.startsWith(item.href) ? "secondary" : "ghost"}
-                size="sm"
-                className={cn("w-full justify-start")}
-              >
-                {item.label}
-              </Button>
+              {item.label}
             </Link>
           ))}
         </nav>

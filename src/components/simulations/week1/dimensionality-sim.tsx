@@ -13,7 +13,6 @@ import {
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
-import { Badge } from "@/components/ui/badge"
 import { generateMultiDimensional } from "@/lib/ml/data-generators"
 
 function linearClassifierAccuracy(
@@ -97,32 +96,51 @@ export function DimensionalitySim() {
         <div>
           <ResponsiveContainer width="100%" height={350}>
             <LineChart data={chartData} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
               <XAxis
                 dataKey="dimension"
-                label={{ value: "Dimensiones", position: "insideBottom", offset: -5 }}
+                stroke="#484852"
+                tick={{ fill: "#888892", fontSize: 10 }}
+                label={{
+                  value: "Dimensiones",
+                  position: "insideBottom",
+                  offset: -5,
+                  fill: "#484852",
+                  fontSize: 10,
+                }}
               />
               <YAxis
                 domain={[40, 100]}
+                stroke="#484852"
+                tick={{ fill: "#888892", fontSize: 10 }}
                 label={{
                   value: "Accuracy (%)",
                   angle: -90,
                   position: "insideLeft",
                   offset: 10,
+                  fill: "#484852",
+                  fontSize: 10,
                 }}
               />
               <Tooltip
                 formatter={(value) => [`${value}%`, "Accuracy"]}
                 labelFormatter={(label) => `${label} dimensiones`}
+                contentStyle={{
+                  backgroundColor: "#16161a",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  borderRadius: "8px",
+                  fontSize: "11px",
+                  fontFamily: "monospace",
+                }}
               />
-              <ReferenceLine y={50} stroke="hsl(0, 84%, 60%)" strokeDasharray="3 3" label="Azar" />
+              <ReferenceLine y={50} stroke="#E8593A" strokeDasharray="3 3" label={{ value: "Azar", fill: "#484852", fontSize: 10 }} />
               <Line
                 type="monotone"
                 dataKey="accuracy"
-                stroke="var(--chart-1)"
+                stroke="#9B7FE8"
                 strokeWidth={2}
-                dot={{ fill: "var(--chart-1)", r: 4 }}
-                activeDot={{ r: 6 }}
+                dot={{ fill: "#9B7FE8", r: 4 }}
+                activeDot={{ r: 6, fill: "#9B7FE8" }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -158,20 +176,28 @@ export function DimensionalitySim() {
             formatValue={(v) => v.toFixed(1)}
           />
 
-          <div className="rounded-lg border p-3 space-y-2 text-sm">
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 space-y-2 text-[11px] font-mono">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Mejor accuracy:</span>
-              <Badge>{maxAcc.toFixed(1)}%</Badge>
+              <span className="text-[#888892]">Mejor accuracy:</span>
+              <span className="text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] bg-[#1DB981]/15 text-[#1DB981]">
+                {maxAcc.toFixed(1)}%
+              </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Mejora total:</span>
-              <Badge variant={improvement > 10 ? "default" : "secondary"}>
+              <span className="text-[#888892]">Mejora total:</span>
+              <span
+                className={`text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
+                  improvement > 10
+                    ? "bg-[#1DB981]/15 text-[#1DB981]"
+                    : "bg-[#16161a] text-[#888892]"
+                }`}
+              >
                 +{improvement.toFixed(1)}%
-              </Badge>
+              </span>
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground">{getMessage()}</p>
+          <p className="text-[11px] font-mono text-[#484852]">{getMessage()}</p>
         </div>
       </div>
     </SimulationCard>

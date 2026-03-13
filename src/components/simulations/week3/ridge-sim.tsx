@@ -13,19 +13,10 @@ import {
   ResponsiveContainer,
   Legend,
   ReferenceLine,
-  Cell,
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
 import { ConceptCallout } from "@/components/shared/concept-callout"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-function randomGaussian(mean = 0, std = 1): number {
-  const u1 = Math.random()
-  const u2 = Math.random()
-  return mean + std * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
-}
 
 function generateCorrelatedData(
   n: number,
@@ -147,11 +138,11 @@ function l2Norm(w: number[]): number {
 }
 
 const COLORS = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
+  "#1DB981",
+  "#E8593A",
+  "#4A8FE8",
+  "#E8A530",
+  "#9B7FE8",
   "#e07c4f",
   "#7c4fe0",
   "#4fe0a8",
@@ -244,6 +235,19 @@ export function RidgeSim() {
     })
   }, [data, numFeatures])
 
+  const tooltipStyle = {
+    backgroundColor: '#16161a',
+    border: '1px solid rgba(255,255,255,0.07)',
+    borderRadius: '8px',
+    fontSize: '11px',
+    fontFamily: 'monospace',
+  }
+
+  const legendStyle = {
+    fontSize: '10px',
+    fontFamily: 'monospace',
+  }
+
   return (
     <SimulationCard
       title="Regularización Ridge (L2)"
@@ -282,92 +286,120 @@ export function RidgeSim() {
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-lg border p-3 text-center">
-            <p className="text-xs text-muted-foreground">MSE Entrenamiento</p>
-            <p className="text-lg font-bold font-mono">{metrics.mseTrain.toFixed(3)}</p>
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center">
+            <p className="font-mono text-[10px] text-[#484852]">MSE Entrenamiento</p>
+            <p className="text-lg font-bold font-mono text-[#e2e2e6]">{metrics.mseTrain.toFixed(3)}</p>
           </div>
-          <div className="rounded-lg border p-3 text-center">
-            <p className="text-xs text-muted-foreground">MSE Test</p>
-            <p className="text-lg font-bold font-mono">{metrics.mseTest.toFixed(3)}</p>
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center">
+            <p className="font-mono text-[10px] text-[#484852]">MSE Test</p>
+            <p className="text-lg font-bold font-mono text-[#e2e2e6]">{metrics.mseTest.toFixed(3)}</p>
           </div>
-          <div className="rounded-lg border p-3 text-center">
-            <p className="text-xs text-muted-foreground">‖w‖₂ (norma L2)</p>
-            <p className="text-lg font-bold font-mono">{metrics.l2.toFixed(3)}</p>
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center">
+            <p className="font-mono text-[10px] text-[#484852]">‖w‖₂ (norma L2)</p>
+            <p className="text-lg font-bold font-mono text-[#e2e2e6]">{metrics.l2.toFixed(3)}</p>
           </div>
         </div>
 
-        <Tabs value={view} onValueChange={(v) => setView(v as typeof view)}>
-          <TabsList>
-            <TabsTrigger value="coefficients">Coeficientes</TabsTrigger>
-            <TabsTrigger value="trajectory">Trayectoria λ</TabsTrigger>
-          </TabsList>
+        <div className="space-y-4">
+          <div className="flex gap-1">
+            <button
+              className={`px-3 py-1.5 rounded text-[11px] font-mono transition-colors ${
+                view === "coefficients"
+                  ? "bg-ml-green text-[#0f0f11]"
+                  : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
+              }`}
+              onClick={() => setView("coefficients")}
+            >
+              Coeficientes
+            </button>
+            <button
+              className={`px-3 py-1.5 rounded text-[11px] font-mono transition-colors ${
+                view === "trajectory"
+                  ? "bg-ml-green text-[#0f0f11]"
+                  : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
+              }`}
+              onClick={() => setView("trajectory")}
+            >
+              Trayectoria λ
+            </button>
+          </div>
 
-          <TabsContent value="coefficients" className="space-y-4">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={coefBarData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Legend />
-                <ReferenceLine y={0} stroke="#888" />
-                <Bar dataKey="Sin reg." fill="var(--chart-1)" radius={[4, 4, 0, 0]} opacity={0.5} />
-                <Bar dataKey={`λ=${lambda}`} fill="var(--chart-3)" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-            <p className="text-xs text-muted-foreground">
-              Compara los coeficientes sin regularización (λ ≈ 0) vs con λ = {lambda.toFixed(1)}.
-              Los coeficientes se encogen hacia cero conforme λ aumenta.
-            </p>
-          </TabsContent>
+          {view === "coefficients" && (
+            <div className="space-y-4">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={coefBarData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                  <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+                  <XAxis dataKey="name" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+                  <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+                  <Tooltip contentStyle={tooltipStyle} />
+                  <Legend wrapperStyle={legendStyle} />
+                  <ReferenceLine y={0} stroke="#484852" />
+                  <Bar dataKey="Sin reg." fill="#4A8FE8" radius={[4, 4, 0, 0]} opacity={0.5} />
+                  <Bar dataKey={`λ=${lambda}`} fill="#1DB981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+              <p className="font-mono text-[10px] text-[#484852]">
+                Compara los coeficientes sin regularización (λ ≈ 0) vs con λ = {lambda.toFixed(1)}.
+                Los coeficientes se encogen hacia cero conforme λ aumenta.
+              </p>
+            </div>
+          )}
 
-          <TabsContent value="trajectory" className="space-y-4">
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={trajectoryData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="lambda"
-                  scale="log"
-                  domain={["auto", "auto"]}
-                  tick={{ fontSize: 11 }}
-                  label={{ value: "λ (log)", position: "insideBottom", offset: -2, fontSize: 11 }}
-                />
-                <YAxis tick={{ fontSize: 11 }} label={{ value: "Valor coef.", angle: -90, position: "insideLeft", fontSize: 11 }} />
-                <Tooltip labelFormatter={(v) => `λ = ${v}`} />
-                <ReferenceLine y={0} stroke="#888" strokeDasharray="3 3" />
-                {Array.from({ length: Math.min(numFeatures, 20) }, (_, i) => (
-                  <Line
-                    key={i}
-                    type="monotone"
-                    dataKey={`β${i + 1}`}
-                    stroke={COLORS[i % COLORS.length]}
-                    strokeWidth={1.5}
-                    dot={false}
+          {view === "trajectory" && (
+            <div className="space-y-4">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={trajectoryData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                  <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="lambda"
+                    scale="log"
+                    domain={["auto", "auto"]}
+                    stroke="#484852"
+                    tick={{ fill: '#888892', fontSize: 10 }}
+                    label={{ value: "λ (log)", position: "insideBottom", offset: -2, fontSize: 10, fill: '#888892' }}
                   />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
+                  <YAxis
+                    stroke="#484852"
+                    tick={{ fill: '#888892', fontSize: 10 }}
+                    label={{ value: "Valor coef.", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
+                  />
+                  <Tooltip contentStyle={tooltipStyle} labelFormatter={(v) => `λ = ${v}`} />
+                  <ReferenceLine y={0} stroke="#484852" strokeDasharray="3 3" />
+                  {Array.from({ length: Math.min(numFeatures, 20) }, (_, i) => (
+                    <Line
+                      key={i}
+                      type="monotone"
+                      dataKey={`β${i + 1}`}
+                      stroke={COLORS[i % COLORS.length]}
+                      strokeWidth={1.5}
+                      dot={false}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
 
-            <p className="text-sm font-medium">MSE vs λ</p>
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={mseTrajectory} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="lambda"
-                  scale="log"
-                  domain={["auto", "auto"]}
-                  tick={{ fontSize: 11 }}
-                  label={{ value: "λ (log)", position: "insideBottom", offset: -2, fontSize: 11 }}
-                />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip labelFormatter={(v) => `λ = ${v}`} />
-                <Legend />
-                <Line type="monotone" dataKey="MSE Train" stroke="var(--chart-1)" strokeWidth={2} dot={{ r: 3 }} />
-                <Line type="monotone" dataKey="MSE Test" stroke="var(--chart-4)" strokeWidth={2} dot={{ r: 3 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </TabsContent>
-        </Tabs>
+              <p className="font-mono text-[11px] text-[#888892]">MSE vs λ</p>
+              <ResponsiveContainer width="100%" height={200}>
+                <LineChart data={mseTrajectory} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                  <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="lambda"
+                    scale="log"
+                    domain={["auto", "auto"]}
+                    stroke="#484852"
+                    tick={{ fill: '#888892', fontSize: 10 }}
+                    label={{ value: "λ (log)", position: "insideBottom", offset: -2, fontSize: 10, fill: '#888892' }}
+                  />
+                  <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+                  <Tooltip contentStyle={tooltipStyle} labelFormatter={(v) => `λ = ${v}`} />
+                  <Legend wrapperStyle={legendStyle} />
+                  <Line type="monotone" dataKey="MSE Train" stroke="#1DB981" strokeWidth={2} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="MSE Test" stroke="#E8A530" strokeWidth={2} dot={{ r: 3 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
 
         {lambda < 0.1 && numFeatures > 8 && (
           <ConceptCallout type="overfitting">

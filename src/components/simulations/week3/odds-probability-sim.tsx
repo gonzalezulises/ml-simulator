@@ -14,7 +14,6 @@ import {
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
-import { Badge } from "@/components/ui/badge"
 
 export function OddsProbabilitySim() {
   const [probability, setProbability] = useState(0.75)
@@ -81,52 +80,52 @@ export function OddsProbabilitySim() {
           />
 
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-lg border p-3 text-center space-y-1">
-              <p className="text-xs text-muted-foreground">Probabilidad</p>
-              <div className="relative h-4 w-full rounded-full bg-muted overflow-hidden">
+            <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center space-y-1">
+              <p className="font-mono text-[10px] text-[#484852]">Probabilidad</p>
+              <div className="relative h-4 w-full rounded-full bg-[#16161a] overflow-hidden">
                 <div
-                  className="absolute inset-y-0 left-0 rounded-full bg-chart-1 transition-all"
+                  className="absolute inset-y-0 left-0 rounded-full bg-ml-green transition-all"
                   style={{ width: `${probability * 100}%` }}
                 />
               </div>
-              <p className="text-lg font-bold font-mono">{probability.toFixed(2)}</p>
-              <p className="text-[10px] text-muted-foreground">Rango: 0 a 1</p>
+              <p className="text-lg font-bold font-mono text-[#e2e2e6]">{probability.toFixed(2)}</p>
+              <p className="font-mono text-[10px] text-[#484852]">Rango: 0 a 1</p>
             </div>
 
-            <div className="rounded-lg border p-3 text-center space-y-1">
-              <p className="text-xs text-muted-foreground">Momios (Odds)</p>
-              <p className="text-lg font-bold font-mono">
+            <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center space-y-1">
+              <p className="font-mono text-[10px] text-[#484852]">Momios (Odds)</p>
+              <p className="text-lg font-bold font-mono text-[#e2e2e6]">
                 {odds < 100 ? odds.toFixed(2) : odds.toFixed(0)}
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="font-mono text-[10px] text-[#888892]">
                 {odds >= 1
                   ? `${odds.toFixed(1)}:1 a favor`
                   : `1:${(1 / odds).toFixed(1)} en contra`}
               </p>
-              <p className="text-[10px] text-muted-foreground">Rango: 0 a ∞</p>
+              <p className="font-mono text-[10px] text-[#484852]">Rango: 0 a &infin;</p>
             </div>
 
-            <div className="rounded-lg border p-3 text-center space-y-1">
-              <p className="text-xs text-muted-foreground">Log-Momios</p>
-              <p className="text-lg font-bold font-mono">{logOdds.toFixed(3)}</p>
-              <p className="text-[10px] text-muted-foreground">
+            <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center space-y-1">
+              <p className="font-mono text-[10px] text-[#484852]">Log-Momios</p>
+              <p className="text-lg font-bold font-mono text-[#e2e2e6]">{logOdds.toFixed(3)}</p>
+              <p className="font-mono text-[10px] text-[#888892]">
                 {logOdds > 0 ? "Positivo → favorece evento" : logOdds < 0 ? "Negativo → desfavorece" : "Cero → 50/50"}
               </p>
-              <p className="text-[10px] text-muted-foreground">Rango: -∞ a +∞</p>
+              <p className="font-mono text-[10px] text-[#484852]">Rango: -&infin; a +&infin;</p>
             </div>
           </div>
 
-          <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
-            <p className="text-sm font-medium">Fórmulas con valores</p>
-            <div className="space-y-1 font-mono text-xs">
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-4 space-y-2">
+            <p className="font-mono text-[11px] text-[#888892]">Fórmulas con valores</p>
+            <div className="space-y-1 font-mono text-[11px] text-[#888892]">
               <p>P = {probability.toFixed(2)}</p>
               <p>
                 Odds = P / (1 - P) = {probability.toFixed(2)} / {(1 - probability).toFixed(2)} ={" "}
-                <span className="font-bold">{odds.toFixed(3)}</span>
+                <span className="font-bold text-[#e2e2e6]">{odds.toFixed(3)}</span>
               </p>
               <p>
                 Log-Odds = ln(Odds) = ln({odds.toFixed(3)}) ={" "}
-                <span className="font-bold">{logOdds.toFixed(3)}</span>
+                <span className="font-bold text-[#e2e2e6]">{logOdds.toFixed(3)}</span>
               </p>
               <p>
                 Log-Odds = β₀ + β₁·x = {b0.toFixed(1)} + {b1.toFixed(1)}·x
@@ -136,32 +135,35 @@ export function OddsProbabilitySim() {
         </div>
 
         <div className="space-y-4">
-          <p className="text-sm font-medium">Curva Sigmoidea</p>
+          <p className="font-mono text-[11px] text-[#888892]">Curva Sigmoidea</p>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={sigmoidData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
               <XAxis
                 dataKey="x"
                 type="number"
                 domain={[-6, 6]}
-                tick={{ fontSize: 11 }}
-                label={{ value: "x (feature)", position: "insideBottom", offset: -2, fontSize: 11 }}
+                stroke="#484852"
+                tick={{ fill: '#888892', fontSize: 10 }}
+                label={{ value: "x (feature)", position: "insideBottom", offset: -2, fontSize: 10, fill: '#888892' }}
               />
               <YAxis
                 domain={[0, 1]}
-                tick={{ fontSize: 11 }}
-                label={{ value: "P(y=1)", angle: -90, position: "insideLeft", fontSize: 11 }}
+                stroke="#484852"
+                tick={{ fill: '#888892', fontSize: 10 }}
+                label={{ value: "P(y=1)", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
               />
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               <Tooltip
+                contentStyle={{ backgroundColor: '#16161a', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}
+                /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
                 formatter={(value: any) => [typeof value === "number" ? value.toFixed(4) : value, "P(y=1)"]}
                 labelFormatter={(v) => `x = ${Number(v).toFixed(1)}`}
               />
-              <ReferenceLine y={0.5} stroke="#888" strokeDasharray="3 3" />
+              <ReferenceLine y={0.5} stroke="#484852" strokeDasharray="3 3" />
               <Line
                 type="monotone"
                 dataKey="p"
-                stroke="var(--chart-1)"
+                stroke="#1DB981"
                 strokeWidth={2}
                 dot={false}
               />
@@ -170,35 +172,39 @@ export function OddsProbabilitySim() {
                   x={Math.round(currentX * 10) / 10}
                   y={probability}
                   r={6}
-                  fill="var(--chart-4)"
-                  stroke="var(--chart-4)"
+                  fill="#E8A530"
+                  stroke="#E8A530"
                 />
               )}
             </LineChart>
           </ResponsiveContainer>
 
-          <div className="rounded-lg border bg-blue-50 dark:bg-blue-950/20 p-4 space-y-2">
-            <p className="text-sm font-medium">Ejemplo de negocio</p>
-            <p className="text-sm">
+          <div className="rounded-lg border border-ml-blue/30 bg-ml-blue/5 p-4 space-y-2">
+            <p className="font-mono text-[11px] text-ml-blue">Ejemplo de negocio</p>
+            <p className="text-[12px] text-[#888892]">
               Si un cliente tiene score crediticio{" "}
-              <span className="font-bold">{creditScore}</span> (x ={" "}
+              <span className="font-bold font-mono text-[#e2e2e6]">{creditScore}</span> (x ={" "}
               {currentX.toFixed(1)}), la probabilidad de pago es{" "}
-              <span className="font-bold">{(probability * 100).toFixed(1)}%</span>.
+              <span className="font-bold font-mono text-[#e2e2e6]">{(probability * 100).toFixed(1)}%</span>.
             </p>
-            <p className="text-sm">
+            <p className="text-[12px] text-[#888892]">
               Los momios son{" "}
-              <span className="font-bold">
+              <span className="font-bold font-mono text-[#e2e2e6]">
                 {odds >= 1
                   ? `${odds.toFixed(1)}:1 a favor`
                   : `1:${(1 / odds).toFixed(1)} en contra`}
               </span>{" "}
               de que pague.
             </p>
-            <p className="text-sm">
+            <p className="text-[12px] text-[#888892]">
               {probability >= 0.5 ? (
-                <Badge variant="secondary">Aprobado</Badge>
+                <span className="inline-block font-mono text-[10px] px-2 py-1 rounded bg-ml-green/10 border border-ml-green/30 text-ml-green">
+                  Aprobado
+                </span>
               ) : (
-                <Badge variant="destructive">Rechazado</Badge>
+                <span className="inline-block font-mono text-[10px] px-2 py-1 rounded bg-ml-coral/10 border border-ml-coral/30 text-ml-coral">
+                  Rechazado
+                </span>
               )}{" "}
               con umbral de 0.5
             </p>

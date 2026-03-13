@@ -13,9 +13,6 @@ import {
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Play, RotateCcw, StepForward, Shuffle, AlertTriangle } from "lucide-react"
 import { generateLinearSeparable, generateNonLinear } from "@/lib/ml/data-generators"
 import { step, accuracy, getDecisionBoundaryLine } from "@/lib/ml/perceptron"
@@ -110,18 +107,41 @@ export function PerceptronSim() {
         <div className="space-y-4">
           <ResponsiveContainer width="100%" height={350}>
             <ScatterChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="x" domain={[-5, 5]} name="x" />
-              <YAxis type="number" dataKey="y" domain={[-5, 5]} name="y" />
-              <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-              <Scatter name="Clase 0" data={class0} fill="hsl(221, 83%, 53%)" />
-              <Scatter name="Clase 1" data={class1} fill="hsl(0, 84%, 60%)" />
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+              <XAxis
+                type="number"
+                dataKey="x"
+                domain={[-5, 5]}
+                name="x"
+                stroke="#484852"
+                tick={{ fill: "#888892", fontSize: 10 }}
+              />
+              <YAxis
+                type="number"
+                dataKey="y"
+                domain={[-5, 5]}
+                name="y"
+                stroke="#484852"
+                tick={{ fill: "#888892", fontSize: 10 }}
+              />
+              <Tooltip
+                cursor={{ strokeDasharray: "3 3" }}
+                contentStyle={{
+                  backgroundColor: "#16161a",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  borderRadius: "8px",
+                  fontSize: "11px",
+                  fontFamily: "monospace",
+                }}
+              />
+              <Scatter name="Clase 0" data={class0} fill="#4A8FE8" />
+              <Scatter name="Clase 1" data={class1} fill="#E8593A" />
               {boundary && (
                 <Scatter
                   name="Frontera"
                   data={boundaryPoints}
                   fill="none"
-                  line={{ stroke: "hsl(142, 71%, 45%)", strokeWidth: 2 }}
+                  line={{ stroke: "#1DB981", strokeWidth: 2 }}
                   lineType="joint"
                   legendType="line"
                 />
@@ -130,13 +150,13 @@ export function PerceptronSim() {
           </ResponsiveContainer>
 
           {nonSeparable && iteration > 50 && (
-            <Alert>
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription>
+            <div className="flex items-start gap-3 rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#E8A530]" />
+              <p className="text-[11px] font-mono text-[#888892]">
                 Los datos no son linealmente separables. El perceptron nunca convergera
                 — necesitas un modelo mas complejo (como redes neuronales con capas ocultas).
-              </AlertDescription>
-            </Alert>
+              </p>
+            </div>
           )}
         </div>
 
@@ -153,53 +173,75 @@ export function PerceptronSim() {
           />
 
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="outline" onClick={() => generateData(true)}>
-              <Shuffle className="mr-1 h-4 w-4" />
+            <button
+              onClick={() => generateData(true)}
+              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-3 py-1.5 font-mono text-[11px] text-[#e2e2e6] transition-colors hover:bg-[#24242a]"
+            >
+              <Shuffle className="h-3.5 w-3.5" />
               Separable
-            </Button>
-            <Button size="sm" variant="outline" onClick={() => generateData(false)}>
-              <Shuffle className="mr-1 h-4 w-4" />
+            </button>
+            <button
+              onClick={() => generateData(false)}
+              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-3 py-1.5 font-mono text-[11px] text-[#e2e2e6] transition-colors hover:bg-[#24242a]"
+            >
+              <Shuffle className="h-3.5 w-3.5" />
               No separable
-            </Button>
+            </button>
           </div>
 
           <div className="flex gap-2">
-            <Button size="sm" onClick={() => doStep()} disabled={isTraining}>
-              <StepForward className="mr-1 h-4 w-4" />
+            <button
+              onClick={() => doStep()}
+              disabled={isTraining}
+              className="inline-flex items-center gap-1.5 rounded-md bg-[#1DB981] px-3 py-1.5 font-mono text-[11px] text-[#0f0f11] font-medium transition-colors hover:bg-[#1DB981]/80 disabled:opacity-40"
+            >
+              <StepForward className="h-3.5 w-3.5" />
               Paso
-            </Button>
-            <Button size="sm" onClick={startTraining}>
-              <Play className="mr-1 h-4 w-4" />
+            </button>
+            <button
+              onClick={startTraining}
+              className="inline-flex items-center gap-1.5 rounded-md bg-[#4A8FE8] px-3 py-1.5 font-mono text-[11px] text-[#0f0f11] font-medium transition-colors hover:bg-[#4A8FE8]/80"
+            >
+              <Play className="h-3.5 w-3.5" />
               {isTraining ? "Detener" : "Entrenar"}
-            </Button>
-            <Button size="sm" variant="ghost" onClick={() => reset()}>
-              <RotateCcw className="mr-1 h-4 w-4" />
+            </button>
+            <button
+              onClick={() => reset()}
+              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-transparent px-3 py-1.5 font-mono text-[11px] text-[#888892] transition-colors hover:bg-[#1e1e24]"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
               Reset
-            </Button>
+            </button>
           </div>
 
-          <div className="rounded-lg border p-3 space-y-2 text-sm font-mono">
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 space-y-2 text-[11px] font-mono">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">w1:</span>
-              <span>{weights.w1.toFixed(4)}</span>
+              <span className="text-[#888892]">w1:</span>
+              <span className="text-[#e2e2e6]">{weights.w1.toFixed(4)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">w2:</span>
-              <span>{weights.w2.toFixed(4)}</span>
+              <span className="text-[#888892]">w2:</span>
+              <span className="text-[#e2e2e6]">{weights.w2.toFixed(4)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">bias:</span>
-              <span>{weights.bias.toFixed(4)}</span>
+              <span className="text-[#888892]">bias:</span>
+              <span className="text-[#e2e2e6]">{weights.bias.toFixed(4)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Iteracion:</span>
-              <span>{iteration}</span>
+              <span className="text-[#888892]">Iteracion:</span>
+              <span className="text-[#e2e2e6]">{iteration}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Accuracy:</span>
-              <Badge variant={acc >= 0.95 ? "default" : "secondary"}>
+              <span className="text-[#888892]">Accuracy:</span>
+              <span
+                className={`font-mono text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
+                  acc >= 0.95
+                    ? "bg-[#1DB981]/15 text-[#1DB981]"
+                    : "bg-[#1e1e24] text-[#888892]"
+                }`}
+              >
                 {(acc * 100).toFixed(1)}%
-              </Badge>
+              </span>
             </div>
           </div>
         </div>

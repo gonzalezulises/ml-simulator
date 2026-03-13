@@ -13,14 +13,6 @@ import {
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
 
 const TASK_MULTIPLIERS: Record<string, number> = {
   clasificacion: 1.0,
@@ -35,6 +27,8 @@ const TASK_LABELS: Record<string, string> = {
   segmentacion: "Segmentacion de imagenes",
   medico: "Diagnostico medico",
 }
+
+const BAR_COLORS = ["#1DB981", "#4A8FE8", "#E8A530", "#9B7FE8"]
 
 export function DataCostSim() {
   const [samples, setSamples] = useState(500)
@@ -51,17 +45,17 @@ export function DataCostSim() {
   const totalCost = collectionCost + cleaningCost + labelingCost + validationCost
 
   const data = [
-    { name: "Recoleccion", costo: Math.round(collectionCost), fill: "var(--chart-1)" },
-    { name: "Limpieza", costo: Math.round(cleaningCost), fill: "var(--chart-2)" },
-    { name: "Etiquetado", costo: Math.round(labelingCost), fill: "var(--chart-3)" },
-    { name: "Validacion", costo: Math.round(validationCost), fill: "var(--chart-4)" },
+    { name: "Recoleccion", costo: Math.round(collectionCost) },
+    { name: "Limpieza", costo: Math.round(cleaningCost) },
+    { name: "Etiquetado", costo: Math.round(labelingCost) },
+    { name: "Validacion", costo: Math.round(validationCost) },
   ]
 
   const getCostLevel = () => {
-    if (totalCost < 1000) return { label: "Bajo", variant: "secondary" as const, message: "Proyecto accesible. Pocos datos y etiquetado barato." }
-    if (totalCost < 10000) return { label: "Moderado", variant: "default" as const, message: "Costo manejable pero significativo. Considera estrategias de active learning." }
-    if (totalCost < 50000) return { label: "Alto", variant: "destructive" as const, message: "Presupuesto considerable. Evalua si puedes usar transfer learning o datos sinteticos." }
-    return { label: "Muy Alto", variant: "destructive" as const, message: "El costo es prohibitivo para muchas organizaciones. Explora pre-entrenamiento, few-shot learning o modelos mas simples." }
+    if (totalCost < 1000) return { label: "Bajo", color: "text-[#1DB981]", bg: "bg-[#1DB981]/15", message: "Proyecto accesible. Pocos datos y etiquetado barato." }
+    if (totalCost < 10000) return { label: "Moderado", color: "text-[#E8A530]", bg: "bg-[#E8A530]/15", message: "Costo manejable pero significativo. Considera estrategias de active learning." }
+    if (totalCost < 50000) return { label: "Alto", color: "text-[#E8593A]", bg: "bg-[#E8593A]/15", message: "Presupuesto considerable. Evalua si puedes usar transfer learning o datos sinteticos." }
+    return { label: "Muy Alto", color: "text-[#E8593A]", bg: "bg-[#E8593A]/15", message: "El costo es prohibitivo para muchas organizaciones. Explora pre-entrenamiento, few-shot learning o modelos mas simples." }
   }
 
   const level = getCostLevel()
@@ -103,49 +97,74 @@ export function DataCostSim() {
             tooltip="Numero de caracteristicas/columnas por muestra"
           />
           <div className="space-y-2">
-            <label className="text-sm font-medium">Tipo de tarea</label>
-            <Select value={taskType} onValueChange={(v) => { if (v) setTaskType(v) }}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
+            <label className="text-[11px] font-mono text-[#888892]">Tipo de tarea</label>
+            <div className="relative">
+              <select
+                value={taskType}
+                onChange={(e) => setTaskType(e.target.value)}
+                className="w-full appearance-none rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-3 py-2 font-mono text-[11px] text-[#e2e2e6] outline-none focus:border-[#4A8FE8]"
+              >
                 {Object.entries(TASK_LABELS).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>
+                  <option key={key} value={key}>
                     {label}
-                  </SelectItem>
+                  </option>
                 ))}
-              </SelectContent>
-            </Select>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg className="h-3.5 w-3.5 text-[#484852]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="space-y-4">
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={data} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
               <XAxis
                 type="number"
                 tickFormatter={(v: number) => `$${v.toLocaleString()}`}
+                stroke="#484852"
+                tick={{ fill: "#888892", fontSize: 10 }}
               />
-              <YAxis type="category" dataKey="name" width={90} />
+              <YAxis
+                type="category"
+                dataKey="name"
+                width={90}
+                stroke="#484852"
+                tick={{ fill: "#888892", fontSize: 10 }}
+              />
               <Tooltip
                 formatter={(value) => [`$${Number(value).toLocaleString()}`, "Costo"]}
+                contentStyle={{
+                  backgroundColor: "#16161a",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  borderRadius: "8px",
+                  fontSize: "11px",
+                  fontFamily: "monospace",
+                }}
               />
               <Bar dataKey="costo" radius={[0, 4, 4, 0]}>
-                {data.map((entry, index) => (
-                  <Cell key={index} fill={entry.fill} />
+                {data.map((_, index) => (
+                  <Cell key={index} fill={BAR_COLORS[index]} />
                 ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
 
-          <div className="rounded-lg border p-4 text-center space-y-2">
-            <p className="text-sm text-muted-foreground">Costo total estimado</p>
-            <p className="text-3xl font-bold font-mono">
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-4 text-center space-y-2">
+            <p className="text-[11px] font-mono text-[#888892]">Costo total estimado</p>
+            <p className="text-2xl font-bold font-mono text-[#e2e2e6]">
               ${Math.round(totalCost).toLocaleString()}
             </p>
-            <Badge variant={level.variant}>{level.label}</Badge>
-            <p className="text-xs text-muted-foreground">{level.message}</p>
+            <span
+              className={`inline-block font-mono text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${level.bg} ${level.color}`}
+            >
+              {level.label}
+            </span>
+            <p className="text-[11px] font-mono text-[#484852]">{level.message}</p>
           </div>
         </div>
       </div>

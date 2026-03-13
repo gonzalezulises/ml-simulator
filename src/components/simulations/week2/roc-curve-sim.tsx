@@ -16,9 +16,6 @@ import {
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
 import { ConceptCallout } from "@/components/shared/concept-callout"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { generateProbabilityScores } from "@/lib/ml/data-generators"
 import { rocCurve, auc } from "@/lib/ml/metrics"
 
 type ModelQuality = "random" | "bad" | "regular" | "good" | "perfect"
@@ -32,17 +29,31 @@ const MODEL_OPTIONS: { key: ModelQuality; label: string; quality: number }[] = [
 ]
 
 const MODEL_COLORS: Record<ModelQuality, string> = {
-  random: "#94a3b8",
-  bad: "#ef4444",
-  regular: "#f59e0b",
-  good: "#22c55e",
-  perfect: "#3b82f6",
+  random: "#484852",
+  bad: "#E8593A",
+  regular: "#E8A530",
+  good: "#1DB981",
+  perfect: "#4A8FE8",
 }
 
 function aucBadge(aucValue: number) {
-  if (aucValue < 0.6) return <Badge className="bg-red-500">AUC: {aucValue.toFixed(3)} - Malo</Badge>
-  if (aucValue < 0.8) return <Badge className="bg-yellow-500 text-black">AUC: {aucValue.toFixed(3)} - Aceptable</Badge>
-  return <Badge className="bg-emerald-500">AUC: {aucValue.toFixed(3)} - Bueno</Badge>
+  if (aucValue < 0.6)
+    return (
+      <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#E8593A]/15 border border-[#E8593A]/20 text-[#E8593A]">
+        AUC: {aucValue.toFixed(3)} - Malo
+      </span>
+    )
+  if (aucValue < 0.8)
+    return (
+      <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#E8A530]/15 border border-[#E8A530]/20 text-[#E8A530]">
+        AUC: {aucValue.toFixed(3)} - Aceptable
+      </span>
+    )
+  return (
+    <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#1DB981]/15 border border-[#1DB981]/20 text-[#1DB981]">
+      AUC: {aucValue.toFixed(3)} - Bueno
+    </span>
+  )
 }
 
 export function RocCurveSim() {
@@ -114,18 +125,21 @@ export function RocCurveSim() {
       <div className="space-y-6">
         {/* Model quality selector */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">Calidad del modelo</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Calidad del modelo</h3>
           <div className="flex gap-2 flex-wrap">
             {MODEL_OPTIONS.map((opt) => (
-              <Button
+              <button
                 key={opt.key}
-                variant={selectedModel === opt.key ? "default" : "outline"}
-                size="sm"
+                className={`font-mono text-[11px] px-3 py-1.5 rounded border transition-colors ${
+                  selectedModel === opt.key
+                    ? "bg-[#4A8FE8]/20 border-[#4A8FE8] text-[#4A8FE8]"
+                    : "bg-[#1e1e24] border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6] hover:border-[rgba(255,255,255,0.15)]"
+                } ${compareMode ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={() => setSelectedModel(opt.key)}
                 disabled={compareMode}
               >
                 {opt.label}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
@@ -143,37 +157,50 @@ export function RocCurveSim() {
             formatValue={(v) => `${100 - v}/${v} (pos/neg)`}
           />
           <div className="flex items-end">
-            <Button
-              variant={compareMode ? "default" : "outline"}
+            <button
+              className={`font-mono text-[11px] px-3 py-1.5 rounded border transition-colors ${
+                compareMode
+                  ? "bg-[#9B7FE8]/20 border-[#9B7FE8] text-[#9B7FE8]"
+                  : "bg-[#1e1e24] border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6] hover:border-[rgba(255,255,255,0.15)]"
+              }`}
               onClick={() => setCompareMode(!compareMode)}
             >
               {compareMode ? "Comparando modelos" : "Comparar todos los modelos"}
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* ROC Curve */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">Curva ROC</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Curva ROC</h3>
           <ResponsiveContainer width="100%" height={350}>
             {compareMode && comparisonData ? (
               <LineChart margin={{ top: 10, right: 20, bottom: 30, left: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
                 <XAxis
                   dataKey="fpr"
                   type="number"
                   domain={[0, 1]}
-                  tick={{ fontSize: 11 }}
-                  label={{ value: "Tasa de Falsos Positivos (FPR)", position: "insideBottom", offset: -15, fontSize: 12 }}
+                  stroke="#484852"
+                  tick={{ fill: '#888892', fontSize: 10 }}
+                  label={{ value: "Tasa de Falsos Positivos (FPR)", position: "insideBottom", offset: -15, fontSize: 10, fill: '#888892' }}
                 />
                 <YAxis
                   dataKey="tpr"
                   type="number"
                   domain={[0, 1]}
-                  tick={{ fontSize: 11 }}
-                  label={{ value: "Tasa de Verdaderos Positivos (TPR)", angle: -90, position: "insideLeft", fontSize: 12 }}
+                  stroke="#484852"
+                  tick={{ fill: '#888892', fontSize: 10 }}
+                  label={{ value: "Tasa de Verdaderos Positivos (TPR)", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
                 />
                 <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#16161a',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderRadius: '8px',
+                    fontSize: '11px',
+                    fontFamily: 'monospace',
+                  }}
                   formatter={(value, name) => [Number(value).toFixed(3), String(name)]}
                 />
                 {/* Diagonal reference */}
@@ -181,7 +208,7 @@ export function RocCurveSim() {
                   data={diagonal}
                   dataKey="tpr"
                   type="linear"
-                  stroke="#94a3b8"
+                  stroke="#484852"
                   strokeDasharray="5 5"
                   dot={false}
                   name="Aleatorio"
@@ -205,22 +232,31 @@ export function RocCurveSim() {
                 data={modelData.roc}
                 margin={{ top: 10, right: 20, bottom: 30, left: 20 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
                 <XAxis
                   dataKey="fpr"
                   type="number"
                   domain={[0, 1]}
-                  tick={{ fontSize: 11 }}
-                  label={{ value: "Tasa de Falsos Positivos (FPR)", position: "insideBottom", offset: -15, fontSize: 12 }}
+                  stroke="#484852"
+                  tick={{ fill: '#888892', fontSize: 10 }}
+                  label={{ value: "Tasa de Falsos Positivos (FPR)", position: "insideBottom", offset: -15, fontSize: 10, fill: '#888892' }}
                 />
                 <YAxis
                   dataKey="tpr"
                   type="number"
                   domain={[0, 1]}
-                  tick={{ fontSize: 11 }}
-                  label={{ value: "Tasa de Verdaderos Positivos (TPR)", angle: -90, position: "insideLeft", fontSize: 12 }}
+                  stroke="#484852"
+                  tick={{ fill: '#888892', fontSize: 10 }}
+                  label={{ value: "Tasa de Verdaderos Positivos (TPR)", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
                 />
                 <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#16161a',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderRadius: '8px',
+                    fontSize: '11px',
+                    fontFamily: 'monospace',
+                  }}
                   formatter={(value) => [Number(value).toFixed(3)]}
                 />
                 <Area
@@ -240,7 +276,7 @@ export function RocCurveSim() {
                 {/* Diagonal */}
                 <ReferenceLine
                   segment={[{ x: 0, y: 0 }, { x: 1, y: 1 }]}
-                  stroke="#94a3b8"
+                  stroke="#484852"
                   strokeDasharray="5 5"
                 />
               </ComposedChart>
@@ -254,29 +290,29 @@ export function RocCurveSim() {
             comparisonData.map((model) => (
               <div key={model.key} className="flex items-center gap-2">
                 <div
-                  className="w-3 h-3 rounded-full"
+                  className="w-2.5 h-2.5 rounded-full"
                   style={{ backgroundColor: MODEL_COLORS[model.key] }}
                 />
-                <span className="text-sm">{model.label}:</span>
+                <span className="text-[11px] font-mono text-[#888892]">{model.label}:</span>
                 {aucBadge(model.auc)}
               </div>
             ))
           ) : (
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold">AUC del modelo:</span>
+              <span className="text-[13px] font-medium text-[#e2e2e6]">AUC del modelo:</span>
               {aucBadge(modelData.auc)}
             </div>
           )}
         </div>
 
         {/* Interpretation guide */}
-        <div className="p-4 rounded-lg bg-muted/50 space-y-2">
-          <h3 className="text-sm font-semibold">Guia de interpretacion</h3>
-          <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-            <li><strong>AUC = 0.5</strong>: El modelo no es mejor que lanzar una moneda</li>
-            <li><strong>AUC 0.6-0.8</strong>: Modelo aceptable, util pero mejorable</li>
-            <li><strong>AUC &gt; 0.8</strong>: Buen modelo con capacidad discriminativa alta</li>
-            <li><strong>AUC = 1.0</strong>: Clasificacion perfecta (sospechoso en la practica)</li>
+        <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-2">
+          <h3 className="text-[13px] font-medium text-[#e2e2e6]">Guia de interpretacion</h3>
+          <ul className="text-[11px] text-[#888892] font-mono space-y-1 list-disc list-inside">
+            <li><strong className="text-[#e2e2e6]">AUC = 0.5</strong>: El modelo no es mejor que lanzar una moneda</li>
+            <li><strong className="text-[#e2e2e6]">AUC 0.6-0.8</strong>: Modelo aceptable, util pero mejorable</li>
+            <li><strong className="text-[#e2e2e6]">AUC &gt; 0.8</strong>: Buen modelo con capacidad discriminativa alta</li>
+            <li><strong className="text-[#e2e2e6]">AUC = 1.0</strong>: Clasificacion perfecta (sospechoso en la practica)</li>
           </ul>
         </div>
 

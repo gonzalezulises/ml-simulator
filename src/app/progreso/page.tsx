@@ -1,15 +1,11 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { weeks } from "@/lib/content/weeks"
 import { useProgress } from "@/hooks/use-progress"
 import { CheckCircle2, Circle, RotateCcw } from "lucide-react"
 
 export default function ProgresoPage() {
-  const { progress, getWeekProgress, getModuleProgress, resetProgress } = useProgress()
+  const { getWeekProgress, getModuleProgress, resetProgress } = useProgress()
 
   const totalModules = weeks.flatMap((w) => w.modules).length
   const completedModules = weeks
@@ -21,67 +17,90 @@ export default function ProgresoPage() {
   const totalProgress = Math.round((completedModules / totalModules) * 100)
 
   return (
-    <main className="container mx-auto px-4 py-12">
+    <main className="px-6 py-12">
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Tu progreso</h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ml-green mb-2">
+              resumen
+            </p>
+            <h1 className="text-2xl font-medium tracking-tight">Tu progreso</h1>
+            <p className="text-[13px] text-[#888892] mt-1">
               {completedModules} de {totalModules} módulos completados
             </p>
           </div>
-          <Button variant="outline" size="sm" onClick={resetProgress}>
-            <RotateCcw className="mr-1 h-4 w-4" />
+          <button
+            onClick={resetProgress}
+            className="flex items-center gap-1.5 font-mono text-[11px] px-3 py-2 rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a] text-[#888892] hover:text-foreground hover:border-[rgba(255,255,255,0.15)] transition-colors"
+          >
+            <RotateCcw className="h-3 w-3" />
             Reiniciar
-          </Button>
+          </button>
         </div>
 
+        {/* Overall progress */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Progreso general</span>
-            <span className="text-sm text-muted-foreground">{totalProgress}%</span>
+            <span className="font-mono text-[11px] text-[#888892]">Progreso general</span>
+            <span className="font-mono text-[11px] text-[#484852]">{totalProgress}%</span>
           </div>
-          <Progress value={totalProgress} className="h-3" />
+          <div className="h-1.5 rounded-full bg-[#1e1e24]">
+            <div
+              className="h-full rounded-full bg-ml-green transition-all"
+              style={{ width: `${totalProgress}%` }}
+            />
+          </div>
         </div>
 
-        {weeks.map((week) => (
-          <Card key={week.id}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Semana {week.id}: {week.title}</CardTitle>
-                <Badge variant={getWeekProgress(week.id) === 100 ? "default" : "outline"}>
-                  {getWeekProgress(week.id)}%
-                </Badge>
+        {/* Week sections */}
+        {weeks.map((week) => {
+          const weekProgress = getWeekProgress(week.id)
+          return (
+            <div
+              key={week.id}
+              className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a]"
+            >
+              <div className="border-b border-[rgba(255,255,255,0.07)] px-5 py-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-[13px] font-medium flex items-center gap-2">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-ml-green" />
+                    Semana {week.id}: {week.title}
+                  </h2>
+                  <span className="font-mono text-[10px] text-[#484852]">{weekProgress}%</span>
+                </div>
+                <div className="h-[3px] rounded-full bg-[#1e1e24] mt-2">
+                  <div
+                    className="h-full rounded-full bg-ml-green transition-all"
+                    style={{ width: `${weekProgress}%` }}
+                  />
+                </div>
               </div>
-              <Progress value={getWeekProgress(week.id)} className="mt-2" />
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
+              <div className="p-5 space-y-2">
                 {week.modules.map((m) => {
                   const mp = getModuleProgress(m.id)
                   const completed = mp?.quizCompleted && mp?.simulationVisited
                   return (
-                    <div key={m.id} className="flex items-center gap-2 text-sm">
+                    <div key={m.id} className="flex items-center gap-2.5 text-[12px]">
                       {completed ? (
-                        <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                        <CheckCircle2 className="h-3.5 w-3.5 text-ml-green shrink-0" />
                       ) : (
-                        <Circle className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <Circle className="h-3.5 w-3.5 text-[#484852] shrink-0" />
                       )}
-                      <span className={completed ? "text-foreground" : "text-muted-foreground"}>
+                      <span className={completed ? "text-foreground" : "text-[#888892]"}>
                         {m.title}
                       </span>
                       {mp?.quizCompleted && (
-                        <Badge variant="secondary" className="ml-auto text-xs">
+                        <span className="ml-auto font-mono text-[10px] px-2 py-0.5 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#484852]">
                           Quiz: {mp.quizScore}%
-                        </Badge>
+                        </span>
                       )}
                     </div>
                   )
                 })}
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            </div>
+          )
+        })}
       </div>
     </main>
   )

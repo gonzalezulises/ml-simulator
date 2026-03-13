@@ -2,10 +2,6 @@
 
 import { useState } from "react"
 import { QuizQuestion } from "@/types/content"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { CheckCircle2, XCircle, Trophy } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -38,8 +34,9 @@ export function QuizSection({
       setSelected("")
       setAnswered(false)
     } else {
-      const finalCorrect = correctCount + (isCorrect ? 0 : 0)
-      const score = Math.round(((isCorrect ? correctCount + 1 : correctCount) / questions.length) * 100)
+      const score = Math.round(
+        (((isCorrect ? correctCount + 1 : correctCount)) / questions.length) * 100
+      )
       setFinished(true)
       onComplete?.(score)
     }
@@ -48,36 +45,42 @@ export function QuizSection({
   if (finished) {
     const score = Math.round((correctCount / questions.length) * 100)
     return (
-      <Card>
-        <CardContent className="pt-6 text-center space-y-4">
-          <Trophy className="h-12 w-12 mx-auto text-yellow-500" />
-          <h3 className="text-xl font-bold">Quiz completado</h3>
-          <p className="text-muted-foreground">
-            Obtuviste <span className="font-bold text-foreground">{correctCount}</span> de{" "}
-            {questions.length} correctas ({score}%)
-          </p>
-          <Badge variant={score >= 70 ? "default" : "destructive"}>
-            {score >= 70 ? "Aprobado" : "Necesitas repasar"}
-          </Badge>
-        </CardContent>
-      </Card>
+      <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a] p-8 text-center space-y-4">
+        <Trophy className="h-10 w-10 mx-auto text-ml-amber" />
+        <h3 className="text-lg font-medium">Quiz completado</h3>
+        <p className="text-[13px] text-[#888892]">
+          Obtuviste <span className="font-bold text-foreground">{correctCount}</span> de{" "}
+          {questions.length} correctas ({score}%)
+        </p>
+        <span
+          className={cn(
+            "inline-block font-mono text-[10px] px-3 py-1 rounded",
+            score >= 70
+              ? "bg-ml-green/10 text-ml-green border border-ml-green/20"
+              : "bg-ml-coral/10 text-ml-coral border border-ml-coral/20"
+          )}
+        >
+          {score >= 70 ? "Aprobado" : "Necesitas repasar"}
+        </span>
+      </div>
     )
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Verificación de conocimiento</CardTitle>
-          <Badge variant="outline">
-            {currentIndex + 1} / {questions.length}
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="font-medium">{question.question}</p>
+    <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a]">
+      <div className="border-b border-[rgba(255,255,255,0.07)] px-5 py-3 flex items-center justify-between">
+        <h3 className="text-[13px] font-medium flex items-center gap-2">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-ml-amber" />
+          Verificación de conocimiento
+        </h3>
+        <span className="font-mono text-[10px] text-[#484852]">
+          {currentIndex + 1} / {questions.length}
+        </span>
+      </div>
+      <div className="p-5 space-y-4">
+        <p className="text-[13px] font-medium leading-relaxed">{question.question}</p>
 
-        <RadioGroup value={selected} onValueChange={setSelected} disabled={answered}>
+        <div className="space-y-2">
           {question.options.map((opt) => {
             const isThis = opt.value === selected
             const isRight = opt.value === question.correctAnswer
@@ -85,41 +88,68 @@ export function QuizSection({
               <label
                 key={opt.value}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors",
-                  answered && isRight && "border-green-500 bg-green-50 dark:bg-green-950",
-                  answered && isThis && !isRight && "border-red-500 bg-red-50 dark:bg-red-950",
-                  !answered && isThis && "border-primary",
+                  "flex items-center gap-3 rounded-lg border border-[rgba(255,255,255,0.07)] px-4 py-3 cursor-pointer transition-all text-[13px]",
+                  answered && isRight && "border-ml-green/50 bg-ml-green/5",
+                  answered && isThis && !isRight && "border-ml-coral/50 bg-ml-coral/5",
+                  !answered && isThis && "border-ml-green/40 bg-[#1e1e24]",
+                  !answered && !isThis && "hover:bg-[#1e1e24]",
                   answered && "cursor-default"
                 )}
+                onClick={() => !answered && setSelected(opt.value)}
               >
-                <RadioGroupItem value={opt.value} />
-                <span className="flex-1">{opt.label}</span>
-                {answered && isRight && <CheckCircle2 className="h-4 w-4 text-green-600" />}
-                {answered && isThis && !isRight && <XCircle className="h-4 w-4 text-red-600" />}
+                <span
+                  className={cn(
+                    "flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+                    isThis
+                      ? "border-ml-green bg-ml-green"
+                      : "border-[#484852]"
+                  )}
+                >
+                  {isThis && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0f0f11]" />
+                  )}
+                </span>
+                <span className="flex-1 text-[#888892]">{opt.label}</span>
+                {answered && isRight && <CheckCircle2 className="h-4 w-4 text-ml-green" />}
+                {answered && isThis && !isRight && <XCircle className="h-4 w-4 text-ml-coral" />}
               </label>
             )
           })}
-        </RadioGroup>
+        </div>
 
         {answered && (
-          <div className="rounded-lg bg-muted p-3 text-sm">
-            <p className="font-medium mb-1">{isCorrect ? "¡Correcto!" : "Incorrecto"}</p>
-            <p className="text-muted-foreground">{question.explanation}</p>
+          <div className={cn(
+            "rounded-lg px-4 py-3 text-[12px] font-mono",
+            isCorrect
+              ? "bg-ml-green/5 border border-ml-green/20"
+              : "bg-ml-coral/5 border border-ml-coral/20"
+          )}>
+            <p className={cn("font-medium mb-1", isCorrect ? "text-ml-green" : "text-ml-coral")}>
+              {isCorrect ? "¡Correcto!" : "Incorrecto"}
+            </p>
+            <p className="text-[#888892]">{question.explanation}</p>
           </div>
         )}
 
         <div className="flex justify-end">
           {!answered ? (
-            <Button onClick={handleAnswer} disabled={!selected}>
+            <button
+              onClick={handleAnswer}
+              disabled={!selected}
+              className="px-4 py-2 rounded-lg font-mono text-[11px] bg-ml-green text-[#0f0f11] font-medium hover:bg-ml-green/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
               Verificar
-            </Button>
+            </button>
           ) : (
-            <Button onClick={handleNext}>
-              {currentIndex + 1 < questions.length ? "Siguiente" : "Finalizar"}
-            </Button>
+            <button
+              onClick={handleNext}
+              className="px-4 py-2 rounded-lg font-mono text-[11px] bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-foreground hover:bg-[#26262e] transition-colors"
+            >
+              {currentIndex + 1 < questions.length ? "Siguiente →" : "Finalizar"}
+            </button>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

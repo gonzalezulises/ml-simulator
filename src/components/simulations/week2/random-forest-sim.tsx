@@ -17,8 +17,6 @@ import {
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
 import { ConceptCallout } from "@/components/shared/concept-callout"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 
 type Point2D = { x: number; y: number; label: 0 | 1 }
 
@@ -86,7 +84,7 @@ function buildSimpleTree(
   if (useFeatures.length === 0) useFeatures.push(Math.random() < 0.5 ? 0 : 1)
 
   let bestGini = Infinity
-  let bestSplit: SimpleSplit = {
+  let bestSplitResult: SimpleSplit = {
     featureIdx: 0,
     threshold: 0,
     leftLabel: majorityLabel,
@@ -116,28 +114,28 @@ function buildSimpleTree(
         bestGini = weightedGini
         const leftLabel: 0 | 1 = leftP >= 0.5 ? 1 : 0
         const rightLabel: 0 | 1 = rightP >= 0.5 ? 1 : 0
-        bestSplit = { featureIdx: fIdx, threshold: thresh, leftLabel, rightLabel }
+        bestSplitResult = { featureIdx: fIdx, threshold: thresh, leftLabel, rightLabel }
       }
     }
   }
 
   if (bestGini >= 0.5) {
-    return bestSplit
+    return bestSplitResult
   }
 
   const leftData = data.filter(
-    (p) => (bestSplit.featureIdx === 0 ? p.x : p.y) <= bestSplit.threshold
+    (p) => (bestSplitResult.featureIdx === 0 ? p.x : p.y) <= bestSplitResult.threshold
   )
   const rightData = data.filter(
-    (p) => (bestSplit.featureIdx === 0 ? p.x : p.y) > bestSplit.threshold
+    (p) => (bestSplitResult.featureIdx === 0 ? p.x : p.y) > bestSplitResult.threshold
   )
 
   if (depth + 1 < maxDepth) {
-    bestSplit.left = buildSimpleTree(leftData, maxDepth, featureFrac, depth + 1)
-    bestSplit.right = buildSimpleTree(rightData, maxDepth, featureFrac, depth + 1)
+    bestSplitResult.left = buildSimpleTree(leftData, maxDepth, featureFrac, depth + 1)
+    bestSplitResult.right = buildSimpleTree(rightData, maxDepth, featureFrac, depth + 1)
   }
 
-  return bestSplit
+  return bestSplitResult
 }
 
 function predictPoint(tree: SimpleSplit, x: number, y: number): 0 | 1 {
@@ -302,31 +300,44 @@ export function RandomForestSim() {
           />
         </div>
 
-        <Button onClick={handleTrain} className="w-full">
+        <button
+          onClick={handleTrain}
+          className="w-full font-mono text-[11px] px-4 py-2.5 rounded border border-ml-green bg-ml-green/15 text-ml-green hover:bg-ml-green/25 transition-colors"
+        >
           Entrenar bosque ({nTrees} arboles)
-        </Button>
+        </button>
 
         {forest && (
           <>
             {/* Combined boundary */}
             <div>
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
+              <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2 flex items-center gap-2">
                 Frontera de decision combinada
-                <Badge variant="outline">Accuracy: {(forestAccuracy * 100).toFixed(1)}%</Badge>
+                <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892]">
+                  Accuracy: {(forestAccuracy * 100).toFixed(1)}%
+                </span>
               </h3>
               <ResponsiveContainer width="100%" height={300}>
                 <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="x" type="number" tick={{ fontSize: 11 }} name="X" />
-                  <YAxis dataKey="y" type="number" tick={{ fontSize: 11 }} name="Y" />
+                  <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+                  <XAxis dataKey="x" type="number" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} name="X" />
+                  <YAxis dataKey="y" type="number" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} name="Y" />
                   <ZAxis range={[15, 15]} />
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#16161a',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                      borderRadius: '8px',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
                   {/* Background grid predictions */}
                   <Scatter data={gridPredictions} shape="square" legendType="none">
                     {gridPredictions.map((p, i) => (
                       <Cell
                         key={i}
-                        fill={p.prediction === 1 ? "#22c55e" : "#ef4444"}
+                        fill={p.prediction === 1 ? "#1DB981" : "#E8593A"}
                         fillOpacity={0.15}
                       />
                     ))}
@@ -343,37 +354,40 @@ export function RandomForestSim() {
                     {data.map((p, i) => (
                       <Cell
                         key={i}
-                        fill={p.label === 1 ? "#16a34a" : "#dc2626"}
+                        fill={p.label === 1 ? "#1DB981" : "#E8593A"}
                         fillOpacity={0.9}
                       />
                     ))}
                   </Scatter>
                 </ScatterChart>
               </ResponsiveContainer>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-[10px] text-[#484852] font-mono mt-1">
                 Haz clic en un punto para ver como voto cada arbol
               </p>
             </div>
 
             {/* Individual tree votes for selected point */}
             {selectedVotes && selectedPoint && (
-              <div className="p-4 rounded-lg bg-muted/50">
-                <h3 className="text-sm font-semibold mb-2">
+              <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)]">
+                <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">
                   Votacion para punto ({selectedPoint.x.toFixed(1)}, {selectedPoint.y.toFixed(1)})
                 </h3>
                 <div className="flex flex-wrap gap-1 mb-2">
                   {selectedVotes.votes.map((v, i) => (
-                    <Badge
+                    <span
                       key={i}
-                      variant="outline"
-                      className={v === 1 ? "bg-emerald-100 dark:bg-emerald-900/30" : "bg-red-100 dark:bg-red-900/30"}
+                      className={`font-mono text-[10px] px-2 py-1 rounded border ${
+                        v === 1
+                          ? "bg-[#1DB981]/15 border-[#1DB981]/20 text-[#1DB981]"
+                          : "bg-[#E8593A]/15 border-[#E8593A]/20 text-[#E8593A]"
+                      }`}
                     >
                       T{i + 1}: {v === 1 ? "+" : "-"}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
-                <div className="text-sm">
-                  Resultado: <strong>{selectedVotes.prediction === 1 ? "Clase 1 (positivo)" : "Clase 0 (negativo)"}</strong>
+                <div className="text-[11px] font-mono text-[#888892]">
+                  Resultado: <strong className="text-[#e2e2e6]">{selectedVotes.prediction === 1 ? "Clase 1 (positivo)" : "Clase 0 (negativo)"}</strong>
                   {" "}({selectedVotes.votes.filter((v) => v === 1).length}/{selectedVotes.votes.length} votos positivos)
                 </div>
               </div>
@@ -381,13 +395,13 @@ export function RandomForestSim() {
 
             {/* Mini tree grid */}
             <div>
-              <h3 className="text-sm font-semibold mb-2">
+              <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">
                 Arboles individuales (mostrando {treesToShow.length} de {forest.length})
               </h3>
               <div className="grid grid-cols-3 gap-2">
                 {treesToShow.map((_, treeIdx) => (
-                  <div key={treeIdx} className="border rounded p-1">
-                    <div className="text-xs text-center text-muted-foreground mb-1">
+                  <div key={treeIdx} className="border border-[rgba(255,255,255,0.07)] rounded-lg bg-[#16161a] p-1">
+                    <div className="text-[10px] text-center text-[#484852] font-mono mb-1">
                       Arbol {treeIdx + 1}
                     </div>
                     <ResponsiveContainer width="100%" height={100}>
@@ -399,7 +413,7 @@ export function RandomForestSim() {
                           {treeGridPredictions[treeIdx]?.map((p, i) => (
                             <Cell
                               key={i}
-                              fill={p.prediction === 1 ? "#22c55e" : "#ef4444"}
+                              fill={p.prediction === 1 ? "#1DB981" : "#E8593A"}
                               fillOpacity={0.3}
                             />
                           ))}
@@ -413,26 +427,37 @@ export function RandomForestSim() {
 
             {/* Convergence chart */}
             <div>
-              <h3 className="text-sm font-semibold mb-2">Convergencia: Accuracy vs Numero de arboles</h3>
+              <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Convergencia: Accuracy vs Numero de arboles</h3>
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={convergenceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
                   <XAxis
                     dataKey="trees"
-                    tick={{ fontSize: 11 }}
-                    label={{ value: "Arboles", position: "insideBottom", offset: -5, fontSize: 12 }}
+                    stroke="#484852"
+                    tick={{ fill: '#888892', fontSize: 10 }}
+                    label={{ value: "Arboles", position: "insideBottom", offset: -5, fontSize: 10, fill: '#888892' }}
                   />
                   <YAxis
                     domain={[0.4, 1]}
-                    tick={{ fontSize: 11 }}
+                    stroke="#484852"
+                    tick={{ fill: '#888892', fontSize: 10 }}
                     tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
-                    label={{ value: "Accuracy", angle: -90, position: "insideLeft", fontSize: 12 }}
+                    label={{ value: "Accuracy", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
                   />
-                  <Tooltip formatter={(v) => [`${(Number(v) * 100).toFixed(1)}%`, "Accuracy"]} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#16161a',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                      borderRadius: '8px',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                    formatter={(v) => [`${(Number(v) * 100).toFixed(1)}%`, "Accuracy"]}
+                  />
                   <Line
                     dataKey="accuracy"
                     type="monotone"
-                    stroke="#3b82f6"
+                    stroke="#4A8FE8"
                     strokeWidth={2}
                     dot={false}
                   />

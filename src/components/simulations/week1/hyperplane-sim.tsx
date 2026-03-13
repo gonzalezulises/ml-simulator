@@ -9,12 +9,9 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceArea,
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
-import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
 import { generateLinearSeparable } from "@/lib/ml/data-generators"
 import type { DataPoint } from "@/types/ml"
 
@@ -136,25 +133,46 @@ export function HyperplaneSim() {
         <div>
           <ResponsiveContainer width="100%" height={380}>
             <ScatterChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="x" domain={[-5, 5]} />
-              <YAxis type="number" dataKey="y" domain={[-5, 5]} />
-              <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-              <Scatter name="Clase 0" data={class0Normal} fill="hsl(221, 83%, 53%)" />
-              <Scatter name="Clase 1" data={class1Normal} fill="hsl(0, 84%, 60%)" />
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+              <XAxis
+                type="number"
+                dataKey="x"
+                domain={[-5, 5]}
+                stroke="#484852"
+                tick={{ fill: "#888892", fontSize: 10 }}
+              />
+              <YAxis
+                type="number"
+                dataKey="y"
+                domain={[-5, 5]}
+                stroke="#484852"
+                tick={{ fill: "#888892", fontSize: 10 }}
+              />
+              <Tooltip
+                cursor={{ strokeDasharray: "3 3" }}
+                contentStyle={{
+                  backgroundColor: "#16161a",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  borderRadius: "8px",
+                  fontSize: "11px",
+                  fontFamily: "monospace",
+                }}
+              />
+              <Scatter name="Clase 0" data={class0Normal} fill="#4A8FE8" />
+              <Scatter name="Clase 1" data={class1Normal} fill="#E8593A" />
               {showMargin && (
                 <>
                   <Scatter
                     name="Clase 0 (margen)"
                     data={class0Margin}
-                    fill="hsl(221, 83%, 53%)"
+                    fill="#4A8FE8"
                     opacity={0.4}
                     shape="diamond"
                   />
                   <Scatter
                     name="Clase 1 (margen)"
                     data={class1Margin}
-                    fill="hsl(0, 84%, 60%)"
+                    fill="#E8593A"
                     opacity={0.4}
                     shape="diamond"
                   />
@@ -164,7 +182,7 @@ export function HyperplaneSim() {
                 name="Frontera"
                 data={boundaryLine}
                 fill="none"
-                line={{ stroke: "hsl(142, 71%, 45%)", strokeWidth: 2 }}
+                line={{ stroke: "#1DB981", strokeWidth: 2 }}
                 lineType="joint"
                 legendType="line"
               />
@@ -175,7 +193,7 @@ export function HyperplaneSim() {
                     data={marginLines.upper}
                     fill="none"
                     line={{
-                      stroke: "hsl(142, 71%, 45%)",
+                      stroke: "#1DB981",
                       strokeWidth: 1,
                       strokeDasharray: "4 4",
                     }}
@@ -187,7 +205,7 @@ export function HyperplaneSim() {
                     data={marginLines.lower}
                     fill="none"
                     line={{
-                      stroke: "hsl(142, 71%, 45%)",
+                      stroke: "#1DB981",
                       strokeWidth: 1,
                       strokeDasharray: "4 4",
                     }}
@@ -233,26 +251,49 @@ export function HyperplaneSim() {
           />
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium">Mostrar margen</label>
-            <Switch checked={showMargin} onCheckedChange={setShowMargin} />
+            <label className="text-[11px] font-mono text-[#888892]">Mostrar margen</label>
+            <button
+              onClick={() => setShowMargin(!showMargin)}
+              className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-[rgba(255,255,255,0.07)] transition-colors ${
+                showMargin ? "bg-[#1DB981]" : "bg-[#1e1e24]"
+              }`}
+            >
+              <span
+                className={`inline-block h-3.5 w-3.5 rounded-full bg-[#e2e2e6] transition-transform ${
+                  showMargin ? "translate-x-4" : "translate-x-0.5"
+                }`}
+              />
+            </button>
           </div>
 
-          <div className="rounded-lg border p-3 space-y-2 text-sm">
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 space-y-2 text-[11px] font-mono">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Accuracy:</span>
-              <Badge variant={acc >= 0.9 ? "default" : "secondary"}>
+              <span className="text-[#888892]">Accuracy:</span>
+              <span
+                className={`text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
+                  acc >= 0.9
+                    ? "bg-[#1DB981]/15 text-[#1DB981]"
+                    : "bg-[#16161a] text-[#888892]"
+                }`}
+              >
                 {(acc * 100).toFixed(1)}%
-              </Badge>
+              </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Violaciones de margen:</span>
-              <Badge variant={marginViolations === 0 ? "default" : "secondary"}>
+              <span className="text-[#888892]">Violaciones de margen:</span>
+              <span
+                className={`text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
+                  marginViolations === 0
+                    ? "bg-[#1DB981]/15 text-[#1DB981]"
+                    : "bg-[#16161a] text-[#888892]"
+                }`}
+              >
                 {marginViolations}
-              </Badge>
+              </span>
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground">
+          <p className="text-[11px] font-mono text-[#484852]">
             Un margen mas amplio suele mejorar la generalizacion, aunque
             sacrifique algunos puntos de entrenamiento. Los puntos con forma de
             diamante estan dentro de la zona de margen.

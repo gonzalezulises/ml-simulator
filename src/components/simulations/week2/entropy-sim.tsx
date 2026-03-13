@@ -13,9 +13,7 @@ import {
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ConceptCallout } from "@/components/shared/concept-callout"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { entropy, informationGain, bestSplit, buildTree } from "@/lib/ml/decision-tree"
+import { entropy, bestSplit, buildTree } from "@/lib/ml/decision-tree"
 import type { TreeNode } from "@/types/ml"
 
 type Row = {
@@ -59,18 +57,18 @@ function TreeDiagram({ node, depth = 0 }: { node: TreeNode; depth?: number }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <div
-        className={`px-3 py-2 rounded-lg border-2 text-xs font-mono text-center min-w-[100px] ${
+        className={`px-3 py-2 rounded-lg border text-[11px] font-mono text-center min-w-[100px] ${
           isLeaf
             ? majority === 1
-              ? "bg-emerald-100 border-emerald-400 dark:bg-emerald-900/30 dark:border-emerald-600"
-              : "bg-red-100 border-red-400 dark:bg-red-900/30 dark:border-red-600"
-            : "bg-blue-50 border-blue-300 dark:bg-blue-900/20 dark:border-blue-600"
+              ? "bg-[#1DB981]/15 border-[#1DB981]/30 text-[#1DB981]"
+              : "bg-[#E8593A]/15 border-[#E8593A]/30 text-[#E8593A]"
+            : "bg-[#4A8FE8]/10 border-[#4A8FE8]/25 text-[#4A8FE8]"
         }`}
       >
         {isLeaf ? (
           <div>
             <div className="font-bold">{majority === 1 ? "Aprobado" : "Rechazado"}</div>
-            <div className="text-muted-foreground">
+            <div className="text-[#888892]">
               [{node.classCounts[0]}, {node.classCounts[1]}]
             </div>
           </div>
@@ -79,7 +77,7 @@ function TreeDiagram({ node, depth = 0 }: { node: TreeNode; depth?: number }) {
             <div className="font-bold">
               {FEATURE_LABELS[node.feature!] ?? node.feature} &le; {node.threshold?.toFixed(1)}
             </div>
-            <div className="text-muted-foreground">
+            <div className="text-[#888892]">
               H={node.entropy.toFixed(3)} | n={node.samples}
             </div>
           </div>
@@ -88,13 +86,13 @@ function TreeDiagram({ node, depth = 0 }: { node: TreeNode; depth?: number }) {
       {!isLeaf && node.left && node.right && (
         <div className="flex gap-4 mt-1">
           <div className="flex flex-col items-center">
-            <div className="text-xs text-muted-foreground mb-1">Si</div>
-            <div className="w-px h-3 bg-border" />
+            <div className="text-[10px] text-[#888892] font-mono mb-1">Si</div>
+            <div className="w-px h-3 bg-[rgba(255,255,255,0.07)]" />
             <TreeDiagram node={node.left} depth={depth + 1} />
           </div>
           <div className="flex flex-col items-center">
-            <div className="text-xs text-muted-foreground mb-1">No</div>
-            <div className="w-px h-3 bg-border" />
+            <div className="text-[10px] text-[#888892] font-mono mb-1">No</div>
+            <div className="w-px h-3 bg-[rgba(255,255,255,0.07)]" />
             <TreeDiagram node={node.right} depth={depth + 1} />
           </div>
         </div>
@@ -148,47 +146,53 @@ export function EntropySim() {
       <div className="space-y-6">
         {/* Dataset table */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">Dataset: Aprobacion de credito</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Dataset: Aprobacion de credito</h3>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse">
+            <table className="w-full text-[11px] font-mono border-collapse">
               <thead>
-                <tr className="border-b">
-                  <th className="px-2 py-1 text-left">#</th>
-                  <th className="px-2 py-1 text-left">Ingreso (k$)</th>
-                  <th className="px-2 py-1 text-left">Edad</th>
-                  <th className="px-2 py-1 text-left">Historial</th>
-                  <th className="px-2 py-1 text-left">Resultado</th>
+                <tr className="border-b border-[rgba(255,255,255,0.07)]">
+                  <th className="px-2 py-1.5 text-left text-[#888892]">#</th>
+                  <th className="px-2 py-1.5 text-left text-[#888892]">Ingreso (k$)</th>
+                  <th className="px-2 py-1.5 text-left text-[#888892]">Edad</th>
+                  <th className="px-2 py-1.5 text-left text-[#888892]">Historial</th>
+                  <th className="px-2 py-1.5 text-left text-[#888892]">Resultado</th>
                 </tr>
               </thead>
               <tbody>
                 {dataset.map((row) => (
-                  <tr key={row.id} className="border-b hover:bg-muted/50">
-                    <td className="px-2 py-1 font-mono">{row.id}</td>
+                  <tr key={row.id} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[#1e1e24]">
+                    <td className="px-2 py-1.5 text-[#484852]">{row.id}</td>
                     <td
-                      className={`px-2 py-1 font-mono ${
-                        selectedFeature === "ingreso" ? "bg-blue-100 dark:bg-blue-900/30" : ""
+                      className={`px-2 py-1.5 text-[#e2e2e6] ${
+                        selectedFeature === "ingreso" ? "bg-[#4A8FE8]/10" : ""
                       }`}
                     >
                       {row.ingreso}
                     </td>
                     <td
-                      className={`px-2 py-1 font-mono ${
-                        selectedFeature === "edad" ? "bg-blue-100 dark:bg-blue-900/30" : ""
+                      className={`px-2 py-1.5 text-[#e2e2e6] ${
+                        selectedFeature === "edad" ? "bg-[#4A8FE8]/10" : ""
                       }`}
                     >
                       {row.edad}
                     </td>
                     <td
-                      className={`px-2 py-1 font-mono ${
-                        selectedFeature === "historial" ? "bg-blue-100 dark:bg-blue-900/30" : ""
+                      className={`px-2 py-1.5 text-[#e2e2e6] ${
+                        selectedFeature === "historial" ? "bg-[#4A8FE8]/10" : ""
                       }`}
                     >
                       {row.historial}
                     </td>
-                    <td className="px-2 py-1">
-                      <Badge variant={row.target === 1 ? "default" : "secondary"}>
+                    <td className="px-2 py-1.5">
+                      <span
+                        className={`font-mono text-[10px] px-2 py-0.5 rounded border ${
+                          row.target === 1
+                            ? "bg-[#1DB981]/15 border-[#1DB981]/20 text-[#1DB981]"
+                            : "bg-[#E8593A]/15 border-[#E8593A]/20 text-[#E8593A]"
+                        }`}
+                      >
                         {row.target === 1 ? "Aprobado" : "Rechazado"}
-                      </Badge>
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -198,49 +202,59 @@ export function EntropySim() {
         </div>
 
         {/* Entropy formula */}
-        <div className="p-4 rounded-lg bg-muted/50 space-y-2">
-          <h3 className="text-sm font-semibold">Entropia del conjunto padre</h3>
-          <div className="font-mono text-sm">
+        <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-2">
+          <h3 className="text-[13px] font-medium text-[#e2e2e6]">Entropia del conjunto padre</h3>
+          <div className="font-mono text-[11px] text-[#9B7FE8]">
             H(S) = -&sum; p(c) &middot; log&sub2;(p(c))
           </div>
-          <div className="font-mono text-sm text-muted-foreground">
+          <div className="font-mono text-[11px] text-[#888892]">
             H(S) = -({analysis.parentCounts[0]}/{dataset.length}) &middot; log&sub2;(
             {analysis.parentCounts[0]}/{dataset.length}) - ({analysis.parentCounts[1]}/
             {dataset.length}) &middot; log&sub2;({analysis.parentCounts[1]}/{dataset.length})
           </div>
-          <div className="font-mono text-sm font-bold">
+          <div className="font-mono text-[11px] font-bold text-[#E8A530]">
             H(S) = {analysis.parentEntropy.toFixed(4)} bits
           </div>
         </div>
 
         {/* Feature selection */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">
             Selecciona una variable para dividir
           </h3>
           <div className="flex gap-2 flex-wrap">
             {FEATURES.map((feat) => (
-              <Button
+              <button
                 key={feat}
-                variant={selectedFeature === feat ? "default" : "outline"}
-                size="sm"
+                className={`font-mono text-[11px] px-3 py-1.5 rounded border transition-colors ${
+                  selectedFeature === feat
+                    ? "bg-[#4A8FE8]/20 border-[#4A8FE8] text-[#4A8FE8]"
+                    : "bg-[#1e1e24] border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6] hover:border-[rgba(255,255,255,0.15)]"
+                }`}
                 onClick={() => setSelectedFeature(feat)}
               >
                 {FEATURE_LABELS[feat]}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
 
         {/* Information gain chart */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">Information Gain por variable</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Information Gain por variable</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={analysis.gains}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+              <XAxis dataKey="label" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+              <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
               <Tooltip
+                contentStyle={{
+                  backgroundColor: '#16161a',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: '8px',
+                  fontSize: '11px',
+                  fontFamily: 'monospace',
+                }}
                 formatter={(value) => [Number(value).toFixed(4), "Info. Gain"]}
               />
               <Bar dataKey="gain" radius={[4, 4, 0, 0]}>
@@ -249,10 +263,10 @@ export function EntropySim() {
                     key={entry.feature}
                     fill={
                       entry.feature === analysis.bestFeature.feature
-                        ? "#22c55e"
+                        ? "#1DB981"
                         : entry.feature === selectedFeature
-                        ? "#3b82f6"
-                        : "#94a3b8"
+                        ? "#4A8FE8"
+                        : "#484852"
                     }
                   />
                 ))}
@@ -263,25 +277,27 @@ export function EntropySim() {
 
         {/* Selected feature detail */}
         {selectedGain && (
-          <div className="p-4 rounded-lg bg-muted/50 space-y-1">
-            <h3 className="text-sm font-semibold">
+          <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-1">
+            <h3 className="text-[13px] font-medium text-[#e2e2e6]">
               Detalle: {FEATURE_LABELS[selectedGain.feature]}
             </h3>
-            <div className="font-mono text-sm">
+            <div className="font-mono text-[11px] text-[#888892]">
               Mejor umbral: {selectedGain.threshold.toFixed(1)}
             </div>
-            <div className="font-mono text-sm">
+            <div className="font-mono text-[11px] text-[#888892]">
               Information Gain: {selectedGain.gain.toFixed(4)}
             </div>
             {selectedGain.feature === analysis.bestFeature.feature && (
-              <Badge className="bg-emerald-500 mt-1">Mejor division</Badge>
+              <span className="inline-block font-mono text-[10px] px-2 py-1 rounded bg-[#1DB981]/15 border border-[#1DB981]/20 text-[#1DB981] mt-1">
+                Mejor division
+              </span>
             )}
           </div>
         )}
 
         {/* Tree diagram */}
         <div>
-          <h3 className="text-sm font-semibold mb-3">Arbol resultante (profundidad 2)</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-3">Arbol resultante (profundidad 2)</h3>
           <div className="overflow-x-auto p-4 flex justify-center">
             <TreeDiagram node={analysis.tree} />
           </div>

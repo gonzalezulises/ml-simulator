@@ -12,8 +12,6 @@ import {
   Cell,
 } from "recharts"
 import { SimulationCard } from "@/components/shared/simulation-card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { tokenize, computeAllTFIDF } from "@/lib/ml/tfidf"
 
 const DEFAULT_DOCS = [
@@ -107,7 +105,7 @@ export function TfidfSim() {
       const parts = text.split(regex)
       return parts.map((part, i) =>
         part.toLowerCase() === word.toLowerCase() ? (
-          <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 px-0.5 rounded">
+          <mark key={i} className="bg-ml-amber/20 text-ml-amber px-0.5 rounded">
             {part}
           </mark>
         ) : (
@@ -120,7 +118,7 @@ export function TfidfSim() {
 
   const SortHeader = ({ label, k }: { label: string; k: SortKey }) => (
     <th
-      className="px-2 py-1.5 text-left text-xs font-medium cursor-pointer hover:bg-muted/50 whitespace-nowrap"
+      className="px-2 py-1.5 text-left text-[10px] font-mono text-[#484852] font-medium cursor-pointer hover:text-[#888892] whitespace-nowrap transition-colors"
       onClick={() => handleSort(k)}
     >
       {label} {sortKey === k ? (sortAsc ? "▲" : "▼") : ""}
@@ -128,6 +126,14 @@ export function TfidfSim() {
   )
 
   const docLabels = ["Tecnología", "Cocina", "Deportes"]
+
+  const tooltipStyle = {
+    backgroundColor: '#16161a',
+    border: '1px solid rgba(255,255,255,0.07)',
+    borderRadius: '8px',
+    fontSize: '11px',
+    fontFamily: 'monospace',
+  }
 
   return (
     <SimulationCard
@@ -138,14 +144,14 @@ export function TfidfSim() {
         <div className="grid gap-4 md:grid-cols-3">
           {docs.map((doc, i) => (
             <div key={i} className="space-y-1">
-              <label className="text-sm font-medium">
+              <label className="font-mono text-[11px] text-[#888892]">
                 Documento {i + 1}: {docLabels[i]}
               </label>
-              <div className="rounded-md border p-2 text-sm min-h-[120px] max-h-[160px] overflow-y-auto leading-relaxed">
+              <div className="rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-2 text-[12px] text-[#888892] min-h-[120px] max-h-[160px] overflow-y-auto leading-relaxed">
                 {highlightWord(doc, selectedWord)}
               </div>
               <textarea
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm resize-none"
+                className="w-full rounded-md border border-[rgba(255,255,255,0.07)] bg-[#16161a] px-3 py-2 text-[12px] text-[#e2e2e6] font-mono resize-none focus:outline-none focus:border-ml-green/50"
                 rows={4}
                 value={doc}
                 onChange={(e) => {
@@ -160,73 +166,83 @@ export function TfidfSim() {
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Buscar palabra:</label>
+            <label className="font-mono text-[11px] text-[#888892]">Buscar palabra:</label>
             <input
               type="text"
-              className="rounded-md border bg-background px-3 py-1.5 text-sm w-40"
+              className="rounded-md border border-[rgba(255,255,255,0.07)] bg-[#16161a] px-3 py-1.5 text-[12px] text-[#e2e2e6] font-mono w-40 focus:outline-none focus:border-ml-green/50"
               placeholder="ej: arroz"
               value={selectedWord}
               onChange={(e) => setSelectedWord(e.target.value.toLowerCase().trim())}
             />
           </div>
           {selectedWord && computed.vocab.includes(selectedWord) && (
-            <Badge variant="secondary">
+            <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892]">
               IDF({selectedWord}) = {computed.idfValues[computed.vocab.indexOf(selectedWord)].toFixed(3)}
-            </Badge>
+            </span>
           )}
         </div>
 
-        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as typeof viewMode)}>
-          <TabsList>
-            <TabsTrigger value="tfidf">TF-IDF</TabsTrigger>
-            <TabsTrigger value="tf">Solo TF</TabsTrigger>
-            <TabsTrigger value="idf">Solo IDF</TabsTrigger>
-          </TabsList>
+        <div className="space-y-4">
+          <div className="flex gap-1">
+            {(["tfidf", "tf", "idf"] as const).map((mode) => (
+              <button
+                key={mode}
+                className={`px-3 py-1.5 rounded text-[11px] font-mono transition-colors ${
+                  viewMode === mode
+                    ? "bg-ml-green text-[#0f0f11]"
+                    : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
+                }`}
+                onClick={() => setViewMode(mode)}
+              >
+                {mode === "tfidf" ? "TF-IDF" : mode === "tf" ? "Solo TF" : "Solo IDF"}
+              </button>
+            ))}
+          </div>
 
-          <TabsContent value={viewMode} className="space-y-4">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData} margin={{ top: 5, right: 20, bottom: 60, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="word"
-                  angle={-45}
-                  textAnchor="end"
-                  height={80}
-                  tick={{ fontSize: 11 }}
-                />
-                <YAxis tick={{ fontSize: 11 }} />
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                <Tooltip
-                  formatter={(value: any) => (typeof value === "number" ? value.toFixed(4) : value)}
-                />
-                {viewMode === "idf" ? (
-                  <Bar dataKey="IDF" fill="var(--chart-1)" radius={[4, 4, 0, 0]}>
-                    {chartData.map((entry, i) => (
-                      <Cell
-                        key={i}
-                        fill={
-                          entry.word === selectedWord
-                            ? "var(--chart-4)"
-                            : "var(--chart-1)"
-                        }
-                      />
-                    ))}
-                  </Bar>
-                ) : (
-                  <>
-                    <Bar dataKey="Doc 1" fill="var(--chart-1)" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="Doc 2" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="Doc 3" fill="var(--chart-3)" radius={[4, 4, 0, 0]} />
-                  </>
-                )}
-              </BarChart>
-            </ResponsiveContainer>
-          </TabsContent>
-        </Tabs>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData} margin={{ top: 5, right: 20, bottom: 60, left: 0 }}>
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
+              <XAxis
+                dataKey="word"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+                stroke="#484852"
+                tick={{ fill: '#888892', fontSize: 10 }}
+              />
+              <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+              <Tooltip
+                contentStyle={tooltipStyle}
+                /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+                formatter={(value: any) => (typeof value === "number" ? value.toFixed(4) : value)}
+              />
+              {viewMode === "idf" ? (
+                <Bar dataKey="IDF" fill="#1DB981" radius={[4, 4, 0, 0]}>
+                  {chartData.map((entry, i) => (
+                    <Cell
+                      key={i}
+                      fill={
+                        entry.word === selectedWord
+                          ? "#E8A530"
+                          : "#1DB981"
+                      }
+                    />
+                  ))}
+                </Bar>
+              ) : (
+                <>
+                  <Bar dataKey="Doc 1" fill="#1DB981" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Doc 2" fill="#4A8FE8" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Doc 3" fill="#9B7FE8" radius={[4, 4, 0, 0]} />
+                </>
+              )}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
-        <div className="overflow-x-auto rounded-md border">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/50">
+        <div className="overflow-x-auto rounded-md border border-[rgba(255,255,255,0.07)]">
+          <table className="w-full text-[11px] font-mono">
+            <thead className="bg-[#1e1e24]">
               <tr>
                 <SortHeader label="Palabra" k="word" />
                 <SortHeader label="TF(D1)" k="tf0" />
@@ -242,32 +258,32 @@ export function TfidfSim() {
               {tableData.map((row) => (
                 <tr
                   key={row.word}
-                  className={`border-t hover:bg-muted/30 ${
+                  className={`border-t border-[rgba(255,255,255,0.07)] cursor-pointer transition-colors ${
                     row.word === selectedWord
-                      ? "bg-yellow-50 dark:bg-yellow-950/30"
-                      : ""
+                      ? "bg-ml-amber/5 text-ml-amber"
+                      : "text-[#888892] hover:bg-[#1e1e24]/50"
                   }`}
                   onClick={() => setSelectedWord(row.word)}
                 >
-                  <td className="px-2 py-1.5 font-mono font-medium cursor-pointer">
+                  <td className="px-2 py-1.5 font-medium">
                     {row.word}
                   </td>
-                  <td className="px-2 py-1.5 font-mono text-xs">{row.tf0.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 font-mono text-xs">{row.tf1.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 font-mono text-xs">{row.tf2.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 font-mono text-xs font-semibold">
+                  <td className="px-2 py-1.5 text-[10px]">{row.tf0.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-[10px]">{row.tf1.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-[10px]">{row.tf2.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-[10px] font-semibold text-[#e2e2e6]">
                     {row.idf.toFixed(4)}
                   </td>
-                  <td className="px-2 py-1.5 font-mono text-xs">{row.tfidf0.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 font-mono text-xs">{row.tfidf1.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 font-mono text-xs">{row.tfidf2.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-[10px]">{row.tfidf0.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-[10px]">{row.tfidf1.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-[10px]">{row.tfidf2.toFixed(4)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <p className="text-xs text-muted-foreground">
+        <p className="font-mono text-[10px] text-[#484852]">
           Las stop words en español se eliminan automáticamente. Haz clic en una fila para
           resaltar la palabra en los documentos. Las palabras únicas de un documento tienen
           IDF alto (log(3/1) = 1.099), las compartidas tienen IDF bajo.

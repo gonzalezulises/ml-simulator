@@ -14,8 +14,6 @@ import {
 import { SimulationCard } from "@/components/shared/simulation-card"
 import { ParameterSlider } from "@/components/shared/parameter-slider"
 import { ConceptCallout } from "@/components/shared/concept-callout"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { generateProbabilityScores } from "@/lib/ml/data-generators"
 import {
   confusionMatrix,
@@ -84,6 +82,8 @@ function getBusinessImpact(context: BusinessContext, threshold: number): string 
   }
 }
 
+const METRIC_COLORS = ["#1DB981", "#4A8FE8", "#E8A530", "#9B7FE8"]
+
 export function DecisionThresholdSim() {
   const [threshold, setThreshold] = useState(0.5)
   const [context, setContext] = useState<BusinessContext>("fraud")
@@ -133,23 +133,26 @@ export function DecisionThresholdSim() {
       <div className="space-y-6">
         {/* Business context selector */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">Contexto de negocio</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Contexto de negocio</h3>
           <div className="flex gap-2 flex-wrap">
             {CONTEXTS.map((c) => (
-              <Button
+              <button
                 key={c.key}
-                variant={context === c.key ? "default" : "outline"}
-                size="sm"
+                className={`font-mono text-[11px] px-3 py-1.5 rounded border transition-colors ${
+                  context === c.key
+                    ? "bg-ml-green/20 border-ml-green text-ml-green"
+                    : "bg-[#1e1e24] border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6] hover:border-[rgba(255,255,255,0.15)]"
+                }`}
                 onClick={() => {
                   setContext(c.key)
                   setThreshold(c.defaultThreshold)
                 }}
               >
                 {c.label}
-              </Button>
+              </button>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground mt-1">{contextInfo.description}</p>
+          <p className="text-[11px] text-[#888892] font-mono mt-1">{contextInfo.description}</p>
         </div>
 
         {/* Threshold slider */}
@@ -166,41 +169,54 @@ export function DecisionThresholdSim() {
 
         {/* Probability distributions */}
         <div>
-          <h3 className="text-sm font-semibold mb-2">Distribuciones de probabilidad</h3>
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Distribuciones de probabilidad</h3>
           <ResponsiveContainer width="100%" height={250}>
             <AreaChart data={distributions}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
               <XAxis
                 dataKey="score"
-                tick={{ fontSize: 11 }}
-                label={{ value: "Probabilidad predicha", position: "insideBottom", offset: -5, fontSize: 12 }}
+                stroke="#484852"
+                tick={{ fill: '#888892', fontSize: 10 }}
+                label={{ value: "Probabilidad predicha", position: "insideBottom", offset: -5, fontSize: 10, fill: '#888892' }}
               />
-              <YAxis tick={{ fontSize: 11 }} label={{ value: "Frecuencia", angle: -90, position: "insideLeft", fontSize: 12 }} />
-              <Tooltip />
+              <YAxis
+                stroke="#484852"
+                tick={{ fill: '#888892', fontSize: 10 }}
+                label={{ value: "Frecuencia", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#16161a',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: '8px',
+                  fontSize: '11px',
+                  fontFamily: 'monospace',
+                }}
+              />
               <Area
                 type="monotone"
                 dataKey="negatives"
                 stackId="1"
-                fill="#ef4444"
-                fillOpacity={0.5}
-                stroke="#ef4444"
+                fill="#E8593A"
+                fillOpacity={0.4}
+                stroke="#E8593A"
                 name="Negativos (clase 0)"
               />
               <Area
                 type="monotone"
                 dataKey="positives"
                 stackId="2"
-                fill="#22c55e"
-                fillOpacity={0.5}
-                stroke="#22c55e"
+                fill="#1DB981"
+                fillOpacity={0.4}
+                stroke="#1DB981"
                 name="Positivos (clase 1)"
               />
               <ReferenceLine
                 x={threshold}
-                stroke="#3b82f6"
+                stroke="#4A8FE8"
                 strokeWidth={3}
                 strokeDasharray="5 5"
-                label={{ value: `T=${threshold.toFixed(2)}`, position: "top", fontSize: 12 }}
+                label={{ value: `T=${threshold.toFixed(2)}`, position: "top", fontSize: 10, fill: '#4A8FE8' }}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -209,25 +225,25 @@ export function DecisionThresholdSim() {
         {/* Confusion matrix */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="text-sm font-semibold mb-2">Matriz de confusion</h3>
-            <div className="grid grid-cols-3 gap-1 text-center text-sm max-w-[280px]">
+            <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Matriz de confusion</h3>
+            <div className="grid grid-cols-3 gap-1 text-center text-[11px] max-w-[280px]">
               <div />
-              <div className="font-semibold p-2">Pred. Neg</div>
-              <div className="font-semibold p-2">Pred. Pos</div>
+              <div className="font-mono font-medium text-[#888892] p-2">Pred. Neg</div>
+              <div className="font-mono font-medium text-[#888892] p-2">Pred. Pos</div>
 
-              <div className="font-semibold p-2">Real Neg</div>
-              <div className="p-3 rounded bg-emerald-100 dark:bg-emerald-900/30 font-mono font-bold">
+              <div className="font-mono font-medium text-[#888892] p-2">Real Neg</div>
+              <div className="p-3 rounded bg-[#1DB981]/15 border border-[#1DB981]/20 font-mono font-bold text-[#1DB981]">
                 TN: {metrics.cm.tn}
               </div>
-              <div className="p-3 rounded bg-red-100 dark:bg-red-900/30 font-mono font-bold">
+              <div className="p-3 rounded bg-[#E8593A]/15 border border-[#E8593A]/20 font-mono font-bold text-[#E8593A]">
                 FP: {metrics.cm.fp}
               </div>
 
-              <div className="font-semibold p-2">Real Pos</div>
-              <div className="p-3 rounded bg-orange-100 dark:bg-orange-900/30 font-mono font-bold">
+              <div className="font-mono font-medium text-[#888892] p-2">Real Pos</div>
+              <div className="p-3 rounded bg-[#E8A530]/15 border border-[#E8A530]/20 font-mono font-bold text-[#E8A530]">
                 FN: {metrics.cm.fn}
               </div>
-              <div className="p-3 rounded bg-emerald-100 dark:bg-emerald-900/30 font-mono font-bold">
+              <div className="p-3 rounded bg-[#1DB981]/15 border border-[#1DB981]/20 font-mono font-bold text-[#1DB981]">
                 TP: {metrics.cm.tp}
               </div>
             </div>
@@ -235,22 +251,22 @@ export function DecisionThresholdSim() {
 
           {/* Metrics panel */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold">Metricas</h3>
+            <h3 className="text-[13px] font-medium text-[#e2e2e6]">Metricas</h3>
             {[
               { label: "Precision", value: metrics.precision },
               { label: "Recall", value: metrics.recall },
               { label: "F1-Score", value: metrics.f1 },
               { label: "Accuracy", value: metrics.accuracy },
-            ].map((m) => (
+            ].map((m, i) => (
               <div key={m.label} className="flex items-center gap-2">
-                <span className="text-sm w-20">{m.label}</span>
-                <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
+                <span className="text-[11px] font-mono text-[#888892] w-20">{m.label}</span>
+                <div className="flex-1 h-2 bg-[#1e1e24] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-chart-1 rounded-full transition-all duration-300"
-                    style={{ width: `${m.value * 100}%` }}
+                    className="h-full rounded-full transition-all duration-300"
+                    style={{ width: `${m.value * 100}%`, backgroundColor: METRIC_COLORS[i] }}
                   />
                 </div>
-                <span className="text-sm font-mono w-14 text-right">
+                <span className="text-[11px] font-mono w-14 text-right text-[#e2e2e6]">
                   {(m.value * 100).toFixed(1)}%
                 </span>
               </div>
@@ -259,12 +275,14 @@ export function DecisionThresholdSim() {
         </div>
 
         {/* Business impact */}
-        <div className="p-4 rounded-lg bg-muted/50">
-          <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
+        <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)]">
+          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-1 flex items-center gap-2">
             Impacto en negocio
-            <Badge variant="outline">{contextInfo.label}</Badge>
+            <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#16161a] border border-[rgba(255,255,255,0.07)] text-[#888892]">
+              {contextInfo.label}
+            </span>
           </h3>
-          <p className="text-sm text-muted-foreground">{impact}</p>
+          <p className="text-[11px] text-[#888892] font-mono">{impact}</p>
         </div>
 
         <ConceptCallout type="no-perfect-model">

@@ -239,12 +239,12 @@ export function RidgeSim() {
     backgroundColor: '#16161a',
     border: '1px solid rgba(255,255,255,0.07)',
     borderRadius: '8px',
-    fontSize: '11px',
+    fontSize: '13px',
     fontFamily: 'monospace',
   }
 
   const legendStyle = {
-    fontSize: '10px',
+    fontSize: '12px',
     fontFamily: 'monospace',
   }
 
@@ -287,15 +287,15 @@ export function RidgeSim() {
 
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center">
-            <p className="font-mono text-[10px] text-[#484852]">MSE Entrenamiento</p>
+            <p className="font-mono text-xs text-[#484852]">MSE Entrenamiento</p>
             <p className="text-lg font-bold font-mono text-[#e2e2e6]">{metrics.mseTrain.toFixed(3)}</p>
           </div>
           <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center">
-            <p className="font-mono text-[10px] text-[#484852]">MSE Test</p>
+            <p className="font-mono text-xs text-[#484852]">MSE Test</p>
             <p className="text-lg font-bold font-mono text-[#e2e2e6]">{metrics.mseTest.toFixed(3)}</p>
           </div>
           <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 text-center">
-            <p className="font-mono text-[10px] text-[#484852]">‖w‖₂ (norma L2)</p>
+            <p className="font-mono text-xs text-[#484852]">‖w‖₂ (norma L2)</p>
             <p className="text-lg font-bold font-mono text-[#e2e2e6]">{metrics.l2.toFixed(3)}</p>
           </div>
         </div>
@@ -303,7 +303,7 @@ export function RidgeSim() {
         <div className="space-y-4">
           <div className="flex gap-1">
             <button
-              className={`px-3 py-1.5 rounded text-[11px] font-mono transition-colors ${
+              className={`px-4 py-2 rounded text-[13px] font-mono transition-colors ${
                 view === "coefficients"
                   ? "bg-ml-green text-[#0f0f11]"
                   : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
@@ -313,7 +313,7 @@ export function RidgeSim() {
               Coeficientes
             </button>
             <button
-              className={`px-3 py-1.5 rounded text-[11px] font-mono transition-colors ${
+              className={`px-4 py-2 rounded text-[13px] font-mono transition-colors ${
                 view === "trajectory"
                   ? "bg-ml-green text-[#0f0f11]"
                   : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
@@ -329,8 +329,8 @@ export function RidgeSim() {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={coefBarData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                   <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
-                  <XAxis dataKey="name" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
-                  <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+                  <XAxis dataKey="name" stroke="#484852" tick={{ fill: '#888892', fontSize: 12 }} />
+                  <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 12 }} />
                   <Tooltip contentStyle={tooltipStyle} />
                   <Legend wrapperStyle={legendStyle} />
                   <ReferenceLine y={0} stroke="#484852" />
@@ -338,7 +338,7 @@ export function RidgeSim() {
                   <Bar dataKey={`λ=${lambda}`} fill="#1DB981" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-              <p className="font-mono text-[10px] text-[#484852]">
+              <p className="font-mono text-xs text-[#484852]">
                 Compara los coeficientes sin regularización (λ ≈ 0) vs con λ = {lambda.toFixed(1)}.
                 Los coeficientes se encogen hacia cero conforme λ aumenta.
               </p>
@@ -355,13 +355,13 @@ export function RidgeSim() {
                     scale="log"
                     domain={["auto", "auto"]}
                     stroke="#484852"
-                    tick={{ fill: '#888892', fontSize: 10 }}
-                    label={{ value: "λ (log)", position: "insideBottom", offset: -2, fontSize: 10, fill: '#888892' }}
+                    tick={{ fill: '#888892', fontSize: 12 }}
+                    label={{ value: "λ (log)", position: "insideBottom", offset: -2, fontSize: 12, fill: '#888892' }}
                   />
                   <YAxis
                     stroke="#484852"
-                    tick={{ fill: '#888892', fontSize: 10 }}
-                    label={{ value: "Valor coef.", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
+                    tick={{ fill: '#888892', fontSize: 12 }}
+                    label={{ value: "Valor coef.", angle: -90, position: "insideLeft", fontSize: 12, fill: '#888892' }}
                   />
                   <Tooltip contentStyle={tooltipStyle} labelFormatter={(v) => `λ = ${v}`} />
                   <ReferenceLine y={0} stroke="#484852" strokeDasharray="3 3" />
@@ -378,7 +378,7 @@ export function RidgeSim() {
                 </LineChart>
               </ResponsiveContainer>
 
-              <p className="font-mono text-[11px] text-[#888892]">MSE vs λ</p>
+              <p className="font-mono text-[13px] text-[#888892]">MSE vs λ</p>
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={mseTrajectory} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                   <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
@@ -387,10 +387,10 @@ export function RidgeSim() {
                     scale="log"
                     domain={["auto", "auto"]}
                     stroke="#484852"
-                    tick={{ fill: '#888892', fontSize: 10 }}
-                    label={{ value: "λ (log)", position: "insideBottom", offset: -2, fontSize: 10, fill: '#888892' }}
+                    tick={{ fill: '#888892', fontSize: 12 }}
+                    label={{ value: "λ (log)", position: "insideBottom", offset: -2, fontSize: 12, fill: '#888892' }}
                   />
-                  <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+                  <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 12 }} />
                   <Tooltip contentStyle={tooltipStyle} labelFormatter={(v) => `λ = ${v}`} />
                   <Legend wrapperStyle={legendStyle} />
                   <Line type="monotone" dataKey="MSE Train" stroke="#1DB981" strokeWidth={2} dot={{ r: 3 }} />

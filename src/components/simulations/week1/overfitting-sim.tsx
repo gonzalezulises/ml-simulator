@@ -217,10 +217,10 @@ export function OverfittingSim() {
                 }`}
               />
             </button>
-            <label className="text-[11px] font-mono text-[#888892]">Mostrar datos de prueba</label>
+            <label className="text-[13px] font-mono text-[#888892]">Mostrar datos de prueba</label>
           </div>
           <span
-            className={`font-mono text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${cfg.bg} ${cfg.color}`}
+            className={`font-mono text-xs px-2.5 py-1 rounded border border-[rgba(255,255,255,0.07)] ${cfg.bg} ${cfg.color}`}
           >
             {cfg.label}
           </span>
@@ -228,7 +228,7 @@ export function OverfittingSim() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div>
-            <h4 className="text-[11px] font-mono text-[#888892] mb-2">Datos y modelo ajustado</h4>
+            <h4 className="text-[13px] font-mono text-[#888892] mb-2">Datos y modelo ajustado</h4>
             <ResponsiveContainer width="100%" height={300}>
               <ScatterChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
                 <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
@@ -237,21 +237,21 @@ export function OverfittingSim() {
                   dataKey="x"
                   domain={[-3.5, 3.5]}
                   stroke="#484852"
-                  tick={{ fill: "#888892", fontSize: 10 }}
+                  tick={{ fill: "#888892", fontSize: 12 }}
                 />
                 <YAxis
                   type="number"
                   dataKey="y"
                   domain={[-3, 3]}
                   stroke="#484852"
-                  tick={{ fill: "#888892", fontSize: 10 }}
+                  tick={{ fill: "#888892", fontSize: 12 }}
                 />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#16161a",
                     border: "1px solid rgba(255,255,255,0.07)",
                     borderRadius: "8px",
-                    fontSize: "11px",
+                    fontSize: "13px",
                     fontFamily: "monospace",
                   }}
                 />
@@ -282,7 +282,7 @@ export function OverfittingSim() {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-mono text-[#888892] mb-2">Error vs Complejidad</h4>
+            <h4 className="text-[13px] font-mono text-[#888892] mb-2">Error vs Complejidad</h4>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart
                 data={errorCurve}
@@ -292,25 +292,25 @@ export function OverfittingSim() {
                 <XAxis
                   dataKey="grado"
                   stroke="#484852"
-                  tick={{ fill: "#888892", fontSize: 10 }}
+                  tick={{ fill: "#888892", fontSize: 12 }}
                   label={{
                     value: "Grado del polinomio",
                     position: "insideBottom",
                     offset: -5,
                     fill: "#484852",
-                    fontSize: 10,
+                    fontSize: 12,
                   }}
                 />
                 <YAxis
                   stroke="#484852"
-                  tick={{ fill: "#888892", fontSize: 10 }}
+                  tick={{ fill: "#888892", fontSize: 12 }}
                   label={{
                     value: "MSE",
                     angle: -90,
                     position: "insideLeft",
                     offset: 10,
                     fill: "#484852",
-                    fontSize: 10,
+                    fontSize: 12,
                   }}
                 />
                 <Tooltip
@@ -318,12 +318,12 @@ export function OverfittingSim() {
                     backgroundColor: "#16161a",
                     border: "1px solid rgba(255,255,255,0.07)",
                     borderRadius: "8px",
-                    fontSize: "11px",
+                    fontSize: "13px",
                     fontFamily: "monospace",
                   }}
                 />
                 <Legend
-                  wrapperStyle={{ fontSize: "10px", fontFamily: "monospace" }}
+                  wrapperStyle={{ fontSize: "12px", fontFamily: "monospace" }}
                 />
                 <Line
                   type="monotone"
@@ -346,7 +346,7 @@ export function OverfittingSim() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 grid grid-cols-2 gap-4 text-[11px] font-mono">
+        <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 grid grid-cols-2 gap-4 text-[13px] font-mono">
           <div className="text-center">
             <p className="text-[#888892]">Error entrenamiento</p>
             <p className="text-[16px] font-bold text-[#e2e2e6] mt-1">

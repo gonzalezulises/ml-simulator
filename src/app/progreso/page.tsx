@@ -21,19 +21,19 @@ export default function ProgresoPage() {
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ml-green mb-2">
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-ml-green mb-2">
               resumen
             </p>
-            <h1 className="text-2xl font-medium tracking-tight">Tu progreso</h1>
-            <p className="text-[13px] text-[#888892] mt-1">
+            <h1 className="text-3xl font-medium tracking-tight">Tu progreso</h1>
+            <p className="text-[15px] text-[#888892] mt-1">
               {completedModules} de {totalModules} módulos completados
             </p>
           </div>
           <button
             onClick={resetProgress}
-            className="flex items-center gap-1.5 font-mono text-[11px] px-3 py-2 rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a] text-[#888892] hover:text-foreground hover:border-[rgba(255,255,255,0.15)] transition-colors"
+            className="flex items-center gap-2 font-mono text-[13px] px-4 py-2.5 rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a] text-[#888892] hover:text-foreground hover:border-[rgba(255,255,255,0.15)] transition-colors"
           >
-            <RotateCcw className="h-3 w-3" />
+            <RotateCcw className="h-4 w-4" />
             Reiniciar
           </button>
         </div>
@@ -41,10 +41,10 @@ export default function ProgresoPage() {
         {/* Overall progress */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="font-mono text-[11px] text-[#888892]">Progreso general</span>
-            <span className="font-mono text-[11px] text-[#484852]">{totalProgress}%</span>
+            <span className="font-mono text-[13px] text-[#888892]">Progreso general</span>
+            <span className="font-mono text-[13px] text-[#484852]">{totalProgress}%</span>
           </div>
-          <div className="h-1.5 rounded-full bg-[#1e1e24]">
+          <div className="h-2 rounded-full bg-[#1e1e24]">
             <div
               className="h-full rounded-full bg-ml-green transition-all"
               style={{ width: `${totalProgress}%` }}
@@ -60,37 +60,37 @@ export default function ProgresoPage() {
               key={week.id}
               className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a]"
             >
-              <div className="border-b border-[rgba(255,255,255,0.07)] px-5 py-3">
+              <div className="border-b border-[rgba(255,255,255,0.07)] px-6 py-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-[13px] font-medium flex items-center gap-2">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-ml-green" />
+                  <h2 className="text-[15px] font-medium flex items-center gap-2">
+                    <span className="inline-block h-2 w-2 rounded-full bg-ml-green" />
                     Semana {week.id}: {week.title}
                   </h2>
-                  <span className="font-mono text-[10px] text-[#484852]">{weekProgress}%</span>
+                  <span className="font-mono text-xs text-[#484852]">{weekProgress}%</span>
                 </div>
-                <div className="h-[3px] rounded-full bg-[#1e1e24] mt-2">
+                <div className="h-1 rounded-full bg-[#1e1e24] mt-3">
                   <div
                     className="h-full rounded-full bg-ml-green transition-all"
                     style={{ width: `${weekProgress}%` }}
                   />
                 </div>
               </div>
-              <div className="p-5 space-y-2">
+              <div className="p-6 space-y-3">
                 {week.modules.map((m) => {
                   const mp = getModuleProgress(m.id)
                   const completed = mp?.quizCompleted && mp?.simulationVisited
                   return (
-                    <div key={m.id} className="flex items-center gap-2.5 text-[12px]">
+                    <div key={m.id} className="flex items-center gap-3 text-sm">
                       {completed ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-ml-green shrink-0" />
+                        <CheckCircle2 className="h-4 w-4 text-ml-green shrink-0" />
                       ) : (
-                        <Circle className="h-3.5 w-3.5 text-[#484852] shrink-0" />
+                        <Circle className="h-4 w-4 text-[#484852] shrink-0" />
                       )}
                       <span className={completed ? "text-foreground" : "text-[#888892]"}>
                         {m.title}
                       </span>
                       {mp?.quizCompleted && (
-                        <span className="ml-auto font-mono text-[10px] px-2 py-0.5 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#484852]">
+                        <span className="ml-auto font-mono text-xs px-2.5 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#484852]">
                           Quiz: {mp.quizScore}%
                         </span>
                       )}

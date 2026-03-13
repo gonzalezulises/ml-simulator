@@ -133,12 +133,12 @@ export function DecisionThresholdSim() {
       <div className="space-y-6">
         {/* Business context selector */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Contexto de negocio</h3>
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2">Contexto de negocio</h3>
           <div className="flex gap-2 flex-wrap">
             {CONTEXTS.map((c) => (
               <button
                 key={c.key}
-                className={`font-mono text-[11px] px-3 py-1.5 rounded border transition-colors ${
+                className={`font-mono text-[13px] px-4 py-2 rounded border transition-colors ${
                   context === c.key
                     ? "bg-ml-green/20 border-ml-green text-ml-green"
                     : "bg-[#1e1e24] border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6] hover:border-[rgba(255,255,255,0.15)]"
@@ -152,7 +152,7 @@ export function DecisionThresholdSim() {
               </button>
             ))}
           </div>
-          <p className="text-[11px] text-[#888892] font-mono mt-1">{contextInfo.description}</p>
+          <p className="text-[13px] text-[#888892] font-mono mt-1">{contextInfo.description}</p>
         </div>
 
         {/* Threshold slider */}
@@ -169,27 +169,27 @@ export function DecisionThresholdSim() {
 
         {/* Probability distributions */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Distribuciones de probabilidad</h3>
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2">Distribuciones de probabilidad</h3>
           <ResponsiveContainer width="100%" height={250}>
             <AreaChart data={distributions}>
               <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
               <XAxis
                 dataKey="score"
                 stroke="#484852"
-                tick={{ fill: '#888892', fontSize: 10 }}
-                label={{ value: "Probabilidad predicha", position: "insideBottom", offset: -5, fontSize: 10, fill: '#888892' }}
+                tick={{ fill: '#888892', fontSize: 12 }}
+                label={{ value: "Probabilidad predicha", position: "insideBottom", offset: -5, fontSize: 12, fill: '#888892' }}
               />
               <YAxis
                 stroke="#484852"
-                tick={{ fill: '#888892', fontSize: 10 }}
-                label={{ value: "Frecuencia", angle: -90, position: "insideLeft", fontSize: 10, fill: '#888892' }}
+                tick={{ fill: '#888892', fontSize: 12 }}
+                label={{ value: "Frecuencia", angle: -90, position: "insideLeft", fontSize: 12, fill: '#888892' }}
               />
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#16161a',
                   border: '1px solid rgba(255,255,255,0.07)',
                   borderRadius: '8px',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontFamily: 'monospace',
                 }}
               />
@@ -216,7 +216,7 @@ export function DecisionThresholdSim() {
                 stroke="#4A8FE8"
                 strokeWidth={3}
                 strokeDasharray="5 5"
-                label={{ value: `T=${threshold.toFixed(2)}`, position: "top", fontSize: 10, fill: '#4A8FE8' }}
+                label={{ value: `T=${threshold.toFixed(2)}`, position: "top", fontSize: 12, fill: '#4A8FE8' }}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -225,8 +225,8 @@ export function DecisionThresholdSim() {
         {/* Confusion matrix */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Matriz de confusion</h3>
-            <div className="grid grid-cols-3 gap-1 text-center text-[11px] max-w-[280px]">
+            <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2">Matriz de confusion</h3>
+            <div className="grid grid-cols-3 gap-1 text-center text-[13px] max-w-[280px]">
               <div />
               <div className="font-mono font-medium text-[#888892] p-2">Pred. Neg</div>
               <div className="font-mono font-medium text-[#888892] p-2">Pred. Pos</div>
@@ -251,7 +251,7 @@ export function DecisionThresholdSim() {
 
           {/* Metrics panel */}
           <div className="space-y-3">
-            <h3 className="text-[13px] font-medium text-[#e2e2e6]">Metricas</h3>
+            <h3 className="text-[15px] font-medium text-[#e2e2e6]">Metricas</h3>
             {[
               { label: "Precision", value: metrics.precision },
               { label: "Recall", value: metrics.recall },
@@ -259,14 +259,14 @@ export function DecisionThresholdSim() {
               { label: "Accuracy", value: metrics.accuracy },
             ].map((m, i) => (
               <div key={m.label} className="flex items-center gap-2">
-                <span className="text-[11px] font-mono text-[#888892] w-20">{m.label}</span>
+                <span className="text-[13px] font-mono text-[#888892] w-20">{m.label}</span>
                 <div className="flex-1 h-2 bg-[#1e1e24] rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-300"
                     style={{ width: `${m.value * 100}%`, backgroundColor: METRIC_COLORS[i] }}
                   />
                 </div>
-                <span className="text-[11px] font-mono w-14 text-right text-[#e2e2e6]">
+                <span className="text-[13px] font-mono w-14 text-right text-[#e2e2e6]">
                   {(m.value * 100).toFixed(1)}%
                 </span>
               </div>
@@ -276,13 +276,13 @@ export function DecisionThresholdSim() {
 
         {/* Business impact */}
         <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)]">
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-1 flex items-center gap-2">
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-1 flex items-center gap-2">
             Impacto en negocio
-            <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#16161a] border border-[rgba(255,255,255,0.07)] text-[#888892]">
+            <span className="font-mono text-xs px-3 py-1.5 rounded bg-[#16161a] border border-[rgba(255,255,255,0.07)] text-[#888892]">
               {contextInfo.label}
             </span>
           </h3>
-          <p className="text-[11px] text-[#888892] font-mono">{impact}</p>
+          <p className="text-[13px] text-[#888892] font-mono">{impact}</p>
         </div>
 
         <ConceptCallout type="no-perfect-model">

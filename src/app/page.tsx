@@ -15,39 +15,39 @@ export default function HomePage() {
     <main className="px-6 py-16">
       <div className="max-w-4xl mx-auto space-y-16">
         {/* Hero */}
-        <div className="text-center space-y-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ml-green">
+        <div className="text-center space-y-5">
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-ml-green">
             simulador interactivo
           </p>
-          <h1 className="text-3xl sm:text-4xl font-medium tracking-tight">
+          <h1 className="text-4xl sm:text-5xl font-medium tracking-tight">
             Machine Learning
           </h1>
-          <p className="text-[14px] text-[#888892] max-w-xl mx-auto leading-relaxed">
+          <p className="text-base text-[#888892] max-w-xl mx-auto leading-relaxed">
             Aprende ajustando parámetros y observando cómo cambian los modelos en tiempo real.
             15 simulaciones interactivas, teoría concisa y verificación de conocimiento.
           </p>
         </div>
 
         {/* Stats bar */}
-        <div className="flex items-center justify-center gap-8 font-mono text-[11px]">
+        <div className="flex items-center justify-center gap-10 font-mono text-[13px]">
           <div className="text-center">
-            <p className="text-foreground font-medium text-lg">15</p>
+            <p className="text-foreground font-medium text-2xl">15</p>
             <p className="text-[#484852]">simulaciones</p>
           </div>
-          <div className="h-8 w-px bg-[rgba(255,255,255,0.07)]" />
+          <div className="h-10 w-px bg-[rgba(255,255,255,0.07)]" />
           <div className="text-center">
-            <p className="text-foreground font-medium text-lg">3</p>
+            <p className="text-foreground font-medium text-2xl">3</p>
             <p className="text-[#484852]">semanas</p>
           </div>
-          <div className="h-8 w-px bg-[rgba(255,255,255,0.07)]" />
+          <div className="h-10 w-px bg-[rgba(255,255,255,0.07)]" />
           <div className="text-center">
-            <p className="text-foreground font-medium text-lg">45</p>
+            <p className="text-foreground font-medium text-2xl">45</p>
             <p className="text-[#484852]">preguntas</p>
           </div>
         </div>
 
         {/* Week cards */}
-        <div className="grid gap-4">
+        <div className="grid gap-5">
           {weeks.map((week) => {
             const Icon = weekIcons[week.id - 1]
             const progress = getWeekProgress(week.id)
@@ -58,41 +58,41 @@ export default function HomePage() {
                 key={week.id}
                 className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a] overflow-hidden"
               >
-                <div className="p-5">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-${colorClass}/10`}>
-                        <Icon className={`h-4 w-4 text-${colorClass}`} />
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                      <div className={`flex h-11 w-11 items-center justify-center rounded-lg bg-${colorClass}/10`}>
+                        <Icon className={`h-5 w-5 text-${colorClass}`} />
                       </div>
                       <div>
-                        <p className="font-mono text-[10px] text-[#484852] uppercase tracking-wider">
+                        <p className="font-mono text-xs text-[#484852] uppercase tracking-wider">
                           Semana {week.id}
                         </p>
-                        <h2 className="text-[14px] font-medium">{week.title}</h2>
+                        <h2 className="text-base font-medium">{week.title}</h2>
                       </div>
                     </div>
-                    <span className="font-mono text-[10px] text-[#484852]">{progress}%</span>
+                    <span className="font-mono text-xs text-[#484852]">{progress}%</span>
                   </div>
 
                   {/* Progress bar */}
-                  <div className="h-[3px] rounded-full bg-[#1e1e24] mb-4">
+                  <div className="h-1 rounded-full bg-[#1e1e24] mb-5">
                     <div
                       className={`h-full rounded-full bg-${colorClass} transition-all`}
                       style={{ width: `${progress}%` }}
                     />
                   </div>
 
-                  <p className="text-[12px] text-[#888892] mb-4 leading-relaxed">
+                  <p className="text-sm text-[#888892] mb-5 leading-relaxed">
                     {week.description}
                   </p>
 
                   {/* Module tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
+                  <div className="flex flex-wrap gap-2 mb-5">
                     {week.modules.map((m) => (
                       <Link
                         key={m.id}
                         href={`/semana/${week.id}/${m.slug}`}
-                        className="font-mono text-[10px] px-2 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-foreground hover:border-[rgba(255,255,255,0.15)] transition-colors"
+                        className="font-mono text-xs px-3 py-1.5 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-foreground hover:border-[rgba(255,255,255,0.15)] transition-colors"
                       >
                         {m.title}
                       </Link>
@@ -101,10 +101,10 @@ export default function HomePage() {
 
                   <Link
                     href={`/semana/${week.id}`}
-                    className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ml-green hover:text-ml-green/80 transition-colors"
+                    className="inline-flex items-center gap-2 font-mono text-[13px] text-ml-green hover:text-ml-green/80 transition-colors"
                   >
                     Comenzar semana {week.id}
-                    <ArrowRight className="h-3 w-3" />
+                    <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>
@@ -113,7 +113,7 @@ export default function HomePage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center font-mono text-[10px] text-[#484852]">
+        <div className="text-center font-mono text-xs text-[#484852]">
           <p>
             Perceptrón · Árboles de decisión · Random Forest · Regresión logística · NLP
           </p>

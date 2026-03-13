@@ -114,7 +114,7 @@ export function PerceptronSim() {
                 domain={[-5, 5]}
                 name="x"
                 stroke="#484852"
-                tick={{ fill: "#888892", fontSize: 10 }}
+                tick={{ fill: "#888892", fontSize: 12 }}
               />
               <YAxis
                 type="number"
@@ -122,7 +122,7 @@ export function PerceptronSim() {
                 domain={[-5, 5]}
                 name="y"
                 stroke="#484852"
-                tick={{ fill: "#888892", fontSize: 10 }}
+                tick={{ fill: "#888892", fontSize: 12 }}
               />
               <Tooltip
                 cursor={{ strokeDasharray: "3 3" }}
@@ -130,7 +130,7 @@ export function PerceptronSim() {
                   backgroundColor: "#16161a",
                   border: "1px solid rgba(255,255,255,0.07)",
                   borderRadius: "8px",
-                  fontSize: "11px",
+                  fontSize: "13px",
                   fontFamily: "monospace",
                 }}
               />
@@ -152,7 +152,7 @@ export function PerceptronSim() {
           {nonSeparable && iteration > 50 && (
             <div className="flex items-start gap-3 rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#E8A530]" />
-              <p className="text-[11px] font-mono text-[#888892]">
+              <p className="text-[13px] font-mono text-[#888892]">
                 Los datos no son linealmente separables. El perceptron nunca convergera
                 — necesitas un modelo mas complejo (como redes neuronales con capas ocultas).
               </p>
@@ -175,14 +175,14 @@ export function PerceptronSim() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => generateData(true)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-3 py-1.5 font-mono text-[11px] text-[#e2e2e6] transition-colors hover:bg-[#24242a]"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-4 py-2 font-mono text-[13px] text-[#e2e2e6] transition-colors hover:bg-[#24242a]"
             >
               <Shuffle className="h-3.5 w-3.5" />
               Separable
             </button>
             <button
               onClick={() => generateData(false)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-3 py-1.5 font-mono text-[11px] text-[#e2e2e6] transition-colors hover:bg-[#24242a]"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-4 py-2 font-mono text-[13px] text-[#e2e2e6] transition-colors hover:bg-[#24242a]"
             >
               <Shuffle className="h-3.5 w-3.5" />
               No separable
@@ -193,28 +193,28 @@ export function PerceptronSim() {
             <button
               onClick={() => doStep()}
               disabled={isTraining}
-              className="inline-flex items-center gap-1.5 rounded-md bg-[#1DB981] px-3 py-1.5 font-mono text-[11px] text-[#0f0f11] font-medium transition-colors hover:bg-[#1DB981]/80 disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-md bg-[#1DB981] px-4 py-2 font-mono text-[13px] text-[#0f0f11] font-medium transition-colors hover:bg-[#1DB981]/80 disabled:opacity-40"
             >
               <StepForward className="h-3.5 w-3.5" />
               Paso
             </button>
             <button
               onClick={startTraining}
-              className="inline-flex items-center gap-1.5 rounded-md bg-[#4A8FE8] px-3 py-1.5 font-mono text-[11px] text-[#0f0f11] font-medium transition-colors hover:bg-[#4A8FE8]/80"
+              className="inline-flex items-center gap-1.5 rounded-md bg-[#4A8FE8] px-4 py-2 font-mono text-[13px] text-[#0f0f11] font-medium transition-colors hover:bg-[#4A8FE8]/80"
             >
               <Play className="h-3.5 w-3.5" />
               {isTraining ? "Detener" : "Entrenar"}
             </button>
             <button
               onClick={() => reset()}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-transparent px-3 py-1.5 font-mono text-[11px] text-[#888892] transition-colors hover:bg-[#1e1e24]"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(255,255,255,0.07)] bg-transparent px-4 py-2 font-mono text-[13px] text-[#888892] transition-colors hover:bg-[#1e1e24]"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Reset
             </button>
           </div>
 
-          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 space-y-2 text-[11px] font-mono">
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 space-y-2 text-[13px] font-mono">
             <div className="flex justify-between">
               <span className="text-[#888892]">w1:</span>
               <span className="text-[#e2e2e6]">{weights.w1.toFixed(4)}</span>
@@ -234,7 +234,7 @@ export function PerceptronSim() {
             <div className="flex justify-between items-center">
               <span className="text-[#888892]">Accuracy:</span>
               <span
-                className={`font-mono text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
+                className={`font-mono text-xs px-2.5 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
                   acc >= 0.95
                     ? "bg-[#1DB981]/15 text-[#1DB981]"
                     : "bg-[#1e1e24] text-[#888892]"

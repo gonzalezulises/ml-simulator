@@ -19,10 +19,10 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[rgba(255,255,255,0.07)] bg-[#0f0f11]/95 backdrop-blur">
-      <div className="flex h-12 items-center px-6">
+      <div className="flex h-14 items-center px-6">
         <Link href="/" className="mr-8 flex items-center gap-2">
-          <span className="text-[15px] font-medium tracking-tight">ML Simulator</span>
-          <span className="font-mono text-[10px] text-[#888892]">v1.0</span>
+          <span className="text-base font-medium tracking-tight">ML Simulator</span>
+          <span className="font-mono text-xs text-[#888892]">v1.0</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-0">
@@ -31,7 +31,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                "px-4 py-3 font-mono text-[11px] border-b-2 border-transparent transition-colors",
+                "px-5 py-4 font-mono text-[13px] border-b-2 border-transparent transition-colors",
                 pathname.startsWith(item.href)
                   ? "text-foreground border-b-ml-green"
                   : "text-[#888892] hover:text-foreground"
@@ -46,7 +46,7 @@ export function SiteHeader() {
           className="md:hidden ml-auto p-2 text-[#888892] hover:text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
-          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
@@ -58,7 +58,7 @@ export function SiteHeader() {
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "px-3 py-2 rounded font-mono text-[11px] transition-colors",
+                "px-4 py-2.5 rounded font-mono text-[13px] transition-colors",
                 pathname.startsWith(item.href)
                   ? "text-foreground bg-[#1e1e24]"
                   : "text-[#888892] hover:text-foreground"

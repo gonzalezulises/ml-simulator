@@ -97,12 +97,12 @@ export function DataCostSim() {
             tooltip="Numero de caracteristicas/columnas por muestra"
           />
           <div className="space-y-2">
-            <label className="text-[11px] font-mono text-[#888892]">Tipo de tarea</label>
+            <label className="text-[13px] font-mono text-[#888892]">Tipo de tarea</label>
             <div className="relative">
               <select
                 value={taskType}
                 onChange={(e) => setTaskType(e.target.value)}
-                className="w-full appearance-none rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-3 py-2 font-mono text-[11px] text-[#e2e2e6] outline-none focus:border-[#4A8FE8]"
+                className="w-full appearance-none rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] px-3 py-2 font-mono text-[13px] text-[#e2e2e6] outline-none focus:border-[#4A8FE8]"
               >
                 {Object.entries(TASK_LABELS).map(([key, label]) => (
                   <option key={key} value={key}>
@@ -127,14 +127,14 @@ export function DataCostSim() {
                 type="number"
                 tickFormatter={(v: number) => `$${v.toLocaleString()}`}
                 stroke="#484852"
-                tick={{ fill: "#888892", fontSize: 10 }}
+                tick={{ fill: "#888892", fontSize: 12 }}
               />
               <YAxis
                 type="category"
                 dataKey="name"
                 width={90}
                 stroke="#484852"
-                tick={{ fill: "#888892", fontSize: 10 }}
+                tick={{ fill: "#888892", fontSize: 12 }}
               />
               <Tooltip
                 formatter={(value) => [`$${Number(value).toLocaleString()}`, "Costo"]}
@@ -142,7 +142,7 @@ export function DataCostSim() {
                   backgroundColor: "#16161a",
                   border: "1px solid rgba(255,255,255,0.07)",
                   borderRadius: "8px",
-                  fontSize: "11px",
+                  fontSize: "13px",
                   fontFamily: "monospace",
                 }}
               />
@@ -155,16 +155,16 @@ export function DataCostSim() {
           </ResponsiveContainer>
 
           <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-4 text-center space-y-2">
-            <p className="text-[11px] font-mono text-[#888892]">Costo total estimado</p>
+            <p className="text-[13px] font-mono text-[#888892]">Costo total estimado</p>
             <p className="text-2xl font-bold font-mono text-[#e2e2e6]">
               ${Math.round(totalCost).toLocaleString()}
             </p>
             <span
-              className={`inline-block font-mono text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${level.bg} ${level.color}`}
+              className={`inline-block font-mono text-xs px-2.5 py-1 rounded border border-[rgba(255,255,255,0.07)] ${level.bg} ${level.color}`}
             >
               {level.label}
             </span>
-            <p className="text-[11px] font-mono text-[#484852]">{level.message}</p>
+            <p className="text-[13px] font-mono text-[#484852]">{level.message}</p>
           </div>
         </div>
       </div>

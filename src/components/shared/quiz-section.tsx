@@ -45,16 +45,16 @@ export function QuizSection({
   if (finished) {
     const score = Math.round((correctCount / questions.length) * 100)
     return (
-      <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a] p-8 text-center space-y-4">
-        <Trophy className="h-10 w-10 mx-auto text-ml-amber" />
-        <h3 className="text-lg font-medium">Quiz completado</h3>
-        <p className="text-[13px] text-[#888892]">
+      <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a] p-10 text-center space-y-5">
+        <Trophy className="h-12 w-12 mx-auto text-ml-amber" />
+        <h3 className="text-xl font-medium">Quiz completado</h3>
+        <p className="text-[15px] text-[#888892]">
           Obtuviste <span className="font-bold text-foreground">{correctCount}</span> de{" "}
           {questions.length} correctas ({score}%)
         </p>
         <span
           className={cn(
-            "inline-block font-mono text-[10px] px-3 py-1 rounded",
+            "inline-block font-mono text-xs px-4 py-1.5 rounded",
             score >= 70
               ? "bg-ml-green/10 text-ml-green border border-ml-green/20"
               : "bg-ml-coral/10 text-ml-coral border border-ml-coral/20"
@@ -68,19 +68,19 @@ export function QuizSection({
 
   return (
     <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#16161a]">
-      <div className="border-b border-[rgba(255,255,255,0.07)] px-5 py-3 flex items-center justify-between">
-        <h3 className="text-[13px] font-medium flex items-center gap-2">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-ml-amber" />
+      <div className="border-b border-[rgba(255,255,255,0.07)] px-6 py-4 flex items-center justify-between">
+        <h3 className="text-[15px] font-medium flex items-center gap-2">
+          <span className="inline-block h-2 w-2 rounded-full bg-ml-amber" />
           Verificación de conocimiento
         </h3>
-        <span className="font-mono text-[10px] text-[#484852]">
+        <span className="font-mono text-xs text-[#484852]">
           {currentIndex + 1} / {questions.length}
         </span>
       </div>
-      <div className="p-5 space-y-4">
-        <p className="text-[13px] font-medium leading-relaxed">{question.question}</p>
+      <div className="p-6 space-y-5">
+        <p className="text-[15px] font-medium leading-relaxed">{question.question}</p>
 
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {question.options.map((opt) => {
             const isThis = opt.value === selected
             const isRight = opt.value === question.correctAnswer
@@ -88,7 +88,7 @@ export function QuizSection({
               <label
                 key={opt.value}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg border border-[rgba(255,255,255,0.07)] px-4 py-3 cursor-pointer transition-all text-[13px]",
+                  "flex items-center gap-4 rounded-lg border border-[rgba(255,255,255,0.07)] px-5 py-3.5 cursor-pointer transition-all text-[15px]",
                   answered && isRight && "border-ml-green/50 bg-ml-green/5",
                   answered && isThis && !isRight && "border-ml-coral/50 bg-ml-coral/5",
                   !answered && isThis && "border-ml-green/40 bg-[#1e1e24]",
@@ -99,19 +99,19 @@ export function QuizSection({
               >
                 <span
                   className={cn(
-                    "flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+                    "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
                     isThis
                       ? "border-ml-green bg-ml-green"
                       : "border-[#484852]"
                   )}
                 >
                   {isThis && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#0f0f11]" />
+                    <span className="h-2 w-2 rounded-full bg-[#0f0f11]" />
                   )}
                 </span>
                 <span className="flex-1 text-[#888892]">{opt.label}</span>
-                {answered && isRight && <CheckCircle2 className="h-4 w-4 text-ml-green" />}
-                {answered && isThis && !isRight && <XCircle className="h-4 w-4 text-ml-coral" />}
+                {answered && isRight && <CheckCircle2 className="h-5 w-5 text-ml-green" />}
+                {answered && isThis && !isRight && <XCircle className="h-5 w-5 text-ml-coral" />}
               </label>
             )
           })}
@@ -119,7 +119,7 @@ export function QuizSection({
 
         {answered && (
           <div className={cn(
-            "rounded-lg px-4 py-3 text-[12px] font-mono",
+            "rounded-lg px-5 py-4 text-sm font-mono",
             isCorrect
               ? "bg-ml-green/5 border border-ml-green/20"
               : "bg-ml-coral/5 border border-ml-coral/20"
@@ -136,14 +136,14 @@ export function QuizSection({
             <button
               onClick={handleAnswer}
               disabled={!selected}
-              className="px-4 py-2 rounded-lg font-mono text-[11px] bg-ml-green text-[#0f0f11] font-medium hover:bg-ml-green/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="px-5 py-2.5 rounded-lg font-mono text-[13px] bg-ml-green text-[#0f0f11] font-medium hover:bg-ml-green/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               Verificar
             </button>
           ) : (
             <button
               onClick={handleNext}
-              className="px-4 py-2 rounded-lg font-mono text-[11px] bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-foreground hover:bg-[#26262e] transition-colors"
+              className="px-5 py-2.5 rounded-lg font-mono text-[13px] bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-foreground hover:bg-[#26262e] transition-colors"
             >
               {currentIndex + 1 < questions.length ? "Siguiente →" : "Finalizar"}
             </button>

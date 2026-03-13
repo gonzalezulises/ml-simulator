@@ -590,22 +590,22 @@ export function ModuleClient({ weekId, moduleSlug }: { weekId: number; moduleSlu
 
   return (
     <main className="px-6 py-12">
-      <div className="max-w-4xl mx-auto space-y-10">
+      <div className="max-w-4xl mx-auto space-y-12">
         <div>
           <Link
             href={`/semana/${weekId}`}
-            className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#888892] hover:text-foreground transition-colors mb-4"
+            className="inline-flex items-center gap-2 font-mono text-[13px] text-[#888892] hover:text-foreground transition-colors mb-4"
           >
-            <ArrowLeft className="h-3 w-3" />
+            <ArrowLeft className="h-4 w-4" />
             Semana {weekId}
           </Link>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#484852]">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="font-mono text-xs px-3 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#484852]">
               Semana {weekId} · Módulo {mod.order}
             </span>
           </div>
-          <h1 className="text-2xl font-medium tracking-tight">{mod.title}</h1>
-          <p className="mt-2 text-[13px] text-[#888892] leading-relaxed">{mod.description}</p>
+          <h1 className="text-3xl font-medium tracking-tight">{mod.title}</h1>
+          <p className="mt-2 text-[15px] text-[#888892] leading-relaxed">{mod.description}</p>
         </div>
 
         <TheoryComponent />

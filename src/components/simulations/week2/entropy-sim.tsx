@@ -57,7 +57,7 @@ function TreeDiagram({ node, depth = 0 }: { node: TreeNode; depth?: number }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <div
-        className={`px-3 py-2 rounded-lg border text-[11px] font-mono text-center min-w-[100px] ${
+        className={`px-3 py-2 rounded-lg border text-[13px] font-mono text-center min-w-[100px] ${
           isLeaf
             ? majority === 1
               ? "bg-[#1DB981]/15 border-[#1DB981]/30 text-[#1DB981]"
@@ -86,12 +86,12 @@ function TreeDiagram({ node, depth = 0 }: { node: TreeNode; depth?: number }) {
       {!isLeaf && node.left && node.right && (
         <div className="flex gap-4 mt-1">
           <div className="flex flex-col items-center">
-            <div className="text-[10px] text-[#888892] font-mono mb-1">Si</div>
+            <div className="text-xs text-[#888892] font-mono mb-1">Si</div>
             <div className="w-px h-3 bg-[rgba(255,255,255,0.07)]" />
             <TreeDiagram node={node.left} depth={depth + 1} />
           </div>
           <div className="flex flex-col items-center">
-            <div className="text-[10px] text-[#888892] font-mono mb-1">No</div>
+            <div className="text-xs text-[#888892] font-mono mb-1">No</div>
             <div className="w-px h-3 bg-[rgba(255,255,255,0.07)]" />
             <TreeDiagram node={node.right} depth={depth + 1} />
           </div>
@@ -146,9 +146,9 @@ export function EntropySim() {
       <div className="space-y-6">
         {/* Dataset table */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Dataset: Aprobacion de credito</h3>
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2">Dataset: Aprobacion de credito</h3>
           <div className="overflow-x-auto">
-            <table className="w-full text-[11px] font-mono border-collapse">
+            <table className="w-full text-[13px] font-mono border-collapse">
               <thead>
                 <tr className="border-b border-[rgba(255,255,255,0.07)]">
                   <th className="px-2 py-1.5 text-left text-[#888892]">#</th>
@@ -185,7 +185,7 @@ export function EntropySim() {
                     </td>
                     <td className="px-2 py-1.5">
                       <span
-                        className={`font-mono text-[10px] px-2 py-0.5 rounded border ${
+                        className={`font-mono text-xs px-2.5 py-1 rounded border ${
                           row.target === 1
                             ? "bg-[#1DB981]/15 border-[#1DB981]/20 text-[#1DB981]"
                             : "bg-[#E8593A]/15 border-[#E8593A]/20 text-[#E8593A]"
@@ -203,30 +203,30 @@ export function EntropySim() {
 
         {/* Entropy formula */}
         <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-2">
-          <h3 className="text-[13px] font-medium text-[#e2e2e6]">Entropia del conjunto padre</h3>
-          <div className="font-mono text-[11px] text-[#9B7FE8]">
+          <h3 className="text-[15px] font-medium text-[#e2e2e6]">Entropia del conjunto padre</h3>
+          <div className="font-mono text-[13px] text-[#9B7FE8]">
             H(S) = -&sum; p(c) &middot; log&sub2;(p(c))
           </div>
-          <div className="font-mono text-[11px] text-[#888892]">
+          <div className="font-mono text-[13px] text-[#888892]">
             H(S) = -({analysis.parentCounts[0]}/{dataset.length}) &middot; log&sub2;(
             {analysis.parentCounts[0]}/{dataset.length}) - ({analysis.parentCounts[1]}/
             {dataset.length}) &middot; log&sub2;({analysis.parentCounts[1]}/{dataset.length})
           </div>
-          <div className="font-mono text-[11px] font-bold text-[#E8A530]">
+          <div className="font-mono text-[13px] font-bold text-[#E8A530]">
             H(S) = {analysis.parentEntropy.toFixed(4)} bits
           </div>
         </div>
 
         {/* Feature selection */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2">
             Selecciona una variable para dividir
           </h3>
           <div className="flex gap-2 flex-wrap">
             {FEATURES.map((feat) => (
               <button
                 key={feat}
-                className={`font-mono text-[11px] px-3 py-1.5 rounded border transition-colors ${
+                className={`font-mono text-[13px] px-4 py-2 rounded border transition-colors ${
                   selectedFeature === feat
                     ? "bg-[#4A8FE8]/20 border-[#4A8FE8] text-[#4A8FE8]"
                     : "bg-[#1e1e24] border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6] hover:border-[rgba(255,255,255,0.15)]"
@@ -241,18 +241,18 @@ export function EntropySim() {
 
         {/* Information gain chart */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Information Gain por variable</h3>
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2">Information Gain por variable</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={analysis.gains}>
               <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
-              <XAxis dataKey="label" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
-              <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+              <XAxis dataKey="label" stroke="#484852" tick={{ fill: '#888892', fontSize: 12 }} />
+              <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 12 }} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#16161a',
                   border: '1px solid rgba(255,255,255,0.07)',
                   borderRadius: '8px',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontFamily: 'monospace',
                 }}
                 formatter={(value) => [Number(value).toFixed(4), "Info. Gain"]}
@@ -278,17 +278,17 @@ export function EntropySim() {
         {/* Selected feature detail */}
         {selectedGain && (
           <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-1">
-            <h3 className="text-[13px] font-medium text-[#e2e2e6]">
+            <h3 className="text-[15px] font-medium text-[#e2e2e6]">
               Detalle: {FEATURE_LABELS[selectedGain.feature]}
             </h3>
-            <div className="font-mono text-[11px] text-[#888892]">
+            <div className="font-mono text-[13px] text-[#888892]">
               Mejor umbral: {selectedGain.threshold.toFixed(1)}
             </div>
-            <div className="font-mono text-[11px] text-[#888892]">
+            <div className="font-mono text-[13px] text-[#888892]">
               Information Gain: {selectedGain.gain.toFixed(4)}
             </div>
             {selectedGain.feature === analysis.bestFeature.feature && (
-              <span className="inline-block font-mono text-[10px] px-2 py-1 rounded bg-[#1DB981]/15 border border-[#1DB981]/20 text-[#1DB981] mt-1">
+              <span className="inline-block font-mono text-xs px-3 py-1.5 rounded bg-[#1DB981]/15 border border-[#1DB981]/20 text-[#1DB981] mt-1">
                 Mejor division
               </span>
             )}
@@ -297,7 +297,7 @@ export function EntropySim() {
 
         {/* Tree diagram */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-3">Arbol resultante (profundidad 2)</h3>
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-3">Arbol resultante (profundidad 2)</h3>
           <div className="overflow-x-auto p-4 flex justify-center">
             <TreeDiagram node={analysis.tree} />
           </div>

@@ -139,14 +139,14 @@ export function HyperplaneSim() {
                 dataKey="x"
                 domain={[-5, 5]}
                 stroke="#484852"
-                tick={{ fill: "#888892", fontSize: 10 }}
+                tick={{ fill: "#888892", fontSize: 12 }}
               />
               <YAxis
                 type="number"
                 dataKey="y"
                 domain={[-5, 5]}
                 stroke="#484852"
-                tick={{ fill: "#888892", fontSize: 10 }}
+                tick={{ fill: "#888892", fontSize: 12 }}
               />
               <Tooltip
                 cursor={{ strokeDasharray: "3 3" }}
@@ -154,7 +154,7 @@ export function HyperplaneSim() {
                   backgroundColor: "#16161a",
                   border: "1px solid rgba(255,255,255,0.07)",
                   borderRadius: "8px",
-                  fontSize: "11px",
+                  fontSize: "13px",
                   fontFamily: "monospace",
                 }}
               />
@@ -251,7 +251,7 @@ export function HyperplaneSim() {
           />
 
           <div className="flex items-center justify-between">
-            <label className="text-[11px] font-mono text-[#888892]">Mostrar margen</label>
+            <label className="text-[13px] font-mono text-[#888892]">Mostrar margen</label>
             <button
               onClick={() => setShowMargin(!showMargin)}
               className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-[rgba(255,255,255,0.07)] transition-colors ${
@@ -266,11 +266,11 @@ export function HyperplaneSim() {
             </button>
           </div>
 
-          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 space-y-2 text-[11px] font-mono">
+          <div className="rounded-lg border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-3 space-y-2 text-[13px] font-mono">
             <div className="flex justify-between items-center">
               <span className="text-[#888892]">Accuracy:</span>
               <span
-                className={`text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
+                className={`text-xs px-2.5 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
                   acc >= 0.9
                     ? "bg-[#1DB981]/15 text-[#1DB981]"
                     : "bg-[#16161a] text-[#888892]"
@@ -282,7 +282,7 @@ export function HyperplaneSim() {
             <div className="flex justify-between items-center">
               <span className="text-[#888892]">Violaciones de margen:</span>
               <span
-                className={`text-[10px] px-2 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
+                className={`text-xs px-2.5 py-1 rounded border border-[rgba(255,255,255,0.07)] ${
                   marginViolations === 0
                     ? "bg-[#1DB981]/15 text-[#1DB981]"
                     : "bg-[#16161a] text-[#888892]"
@@ -293,7 +293,7 @@ export function HyperplaneSim() {
             </div>
           </div>
 
-          <p className="text-[11px] font-mono text-[#484852]">
+          <p className="text-[13px] font-mono text-[#484852]">
             Un margen mas amplio suele mejorar la generalizacion, aunque
             sacrifique algunos puntos de entrenamiento. Los puntos con forma de
             diamante estan dentro de la zona de margen.

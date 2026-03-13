@@ -46,14 +46,14 @@ export function ConceptCallout({
   const Icon = config.icon
 
   return (
-    <div className={`rounded-lg border ${config.borderClass} ${config.bgClass} p-4`}>
+    <div className={`rounded-lg border ${config.borderClass} ${config.bgClass} p-5`}>
       <div className="flex items-start gap-3">
-        <Icon className={`h-4 w-4 mt-0.5 shrink-0 ${config.iconClass}`} />
+        <Icon className={`h-5 w-5 mt-0.5 shrink-0 ${config.iconClass}`} />
         <div className="space-y-1">
-          <p className={`font-mono text-[11px] font-medium ${config.iconClass}`}>
+          <p className={`font-mono text-[13px] font-medium ${config.iconClass}`}>
             {config.title}
           </p>
-          <div className="text-[12px] text-[#888892] leading-relaxed">
+          <div className="text-sm text-[#888892] leading-relaxed">
             {children}
           </div>
         </div>

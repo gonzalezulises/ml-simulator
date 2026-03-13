@@ -107,7 +107,7 @@
 .recharts-cartesian-axis-tick-value {
   fill: #484852 !important;
   font-family: var(--font-mono) !important;
-  font-size: 10px !important;
+  font-size: 12px !important;
 }
 .recharts-cartesian-axis-line {
   stroke: #2a2a32 !important;
@@ -117,10 +117,10 @@
   border: 0.5px solid rgba(255, 255, 255, 0.13) !important;
   border-radius: 6px !important;
   font-family: var(--font-mono) !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
 }
 .recharts-legend-item-text {
   color: #888892 !important;
   font-family: var(--font-mono) !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
 }

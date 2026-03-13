@@ -118,7 +118,7 @@ export function TfidfSim() {
 
   const SortHeader = ({ label, k }: { label: string; k: SortKey }) => (
     <th
-      className="px-2 py-1.5 text-left text-[10px] font-mono text-[#484852] font-medium cursor-pointer hover:text-[#888892] whitespace-nowrap transition-colors"
+      className="px-2 py-1.5 text-left text-xs font-mono text-[#484852] font-medium cursor-pointer hover:text-[#888892] whitespace-nowrap transition-colors"
       onClick={() => handleSort(k)}
     >
       {label} {sortKey === k ? (sortAsc ? "▲" : "▼") : ""}
@@ -131,7 +131,7 @@ export function TfidfSim() {
     backgroundColor: '#16161a',
     border: '1px solid rgba(255,255,255,0.07)',
     borderRadius: '8px',
-    fontSize: '11px',
+    fontSize: '13px',
     fontFamily: 'monospace',
   }
 
@@ -144,14 +144,14 @@ export function TfidfSim() {
         <div className="grid gap-4 md:grid-cols-3">
           {docs.map((doc, i) => (
             <div key={i} className="space-y-1">
-              <label className="font-mono text-[11px] text-[#888892]">
+              <label className="font-mono text-[13px] text-[#888892]">
                 Documento {i + 1}: {docLabels[i]}
               </label>
-              <div className="rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-2 text-[12px] text-[#888892] min-h-[120px] max-h-[160px] overflow-y-auto leading-relaxed">
+              <div className="rounded-md border border-[rgba(255,255,255,0.07)] bg-[#1e1e24] p-2 text-sm text-[#888892] min-h-[120px] max-h-[160px] overflow-y-auto leading-relaxed">
                 {highlightWord(doc, selectedWord)}
               </div>
               <textarea
-                className="w-full rounded-md border border-[rgba(255,255,255,0.07)] bg-[#16161a] px-3 py-2 text-[12px] text-[#e2e2e6] font-mono resize-none focus:outline-none focus:border-ml-green/50"
+                className="w-full rounded-md border border-[rgba(255,255,255,0.07)] bg-[#16161a] px-3 py-2 text-sm text-[#e2e2e6] font-mono resize-none focus:outline-none focus:border-ml-green/50"
                 rows={4}
                 value={doc}
                 onChange={(e) => {
@@ -166,17 +166,17 @@ export function TfidfSim() {
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <label className="font-mono text-[11px] text-[#888892]">Buscar palabra:</label>
+            <label className="font-mono text-[13px] text-[#888892]">Buscar palabra:</label>
             <input
               type="text"
-              className="rounded-md border border-[rgba(255,255,255,0.07)] bg-[#16161a] px-3 py-1.5 text-[12px] text-[#e2e2e6] font-mono w-40 focus:outline-none focus:border-ml-green/50"
+              className="rounded-md border border-[rgba(255,255,255,0.07)] bg-[#16161a] px-3 py-1.5 text-sm text-[#e2e2e6] font-mono w-40 focus:outline-none focus:border-ml-green/50"
               placeholder="ej: arroz"
               value={selectedWord}
               onChange={(e) => setSelectedWord(e.target.value.toLowerCase().trim())}
             />
           </div>
           {selectedWord && computed.vocab.includes(selectedWord) && (
-            <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892]">
+            <span className="font-mono text-xs px-2.5 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892]">
               IDF({selectedWord}) = {computed.idfValues[computed.vocab.indexOf(selectedWord)].toFixed(3)}
             </span>
           )}
@@ -187,7 +187,7 @@ export function TfidfSim() {
             {(["tfidf", "tf", "idf"] as const).map((mode) => (
               <button
                 key={mode}
-                className={`px-3 py-1.5 rounded text-[11px] font-mono transition-colors ${
+                className={`px-4 py-2 rounded text-[13px] font-mono transition-colors ${
                   viewMode === mode
                     ? "bg-ml-green text-[#0f0f11]"
                     : "bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6]"
@@ -208,9 +208,9 @@ export function TfidfSim() {
                 textAnchor="end"
                 height={80}
                 stroke="#484852"
-                tick={{ fill: '#888892', fontSize: 10 }}
+                tick={{ fill: '#888892', fontSize: 12 }}
               />
-              <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} />
+              <YAxis stroke="#484852" tick={{ fill: '#888892', fontSize: 12 }} />
               <Tooltip
                 contentStyle={tooltipStyle}
                 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -241,7 +241,7 @@ export function TfidfSim() {
         </div>
 
         <div className="overflow-x-auto rounded-md border border-[rgba(255,255,255,0.07)]">
-          <table className="w-full text-[11px] font-mono">
+          <table className="w-full text-[13px] font-mono">
             <thead className="bg-[#1e1e24]">
               <tr>
                 <SortHeader label="Palabra" k="word" />
@@ -268,22 +268,22 @@ export function TfidfSim() {
                   <td className="px-2 py-1.5 font-medium">
                     {row.word}
                   </td>
-                  <td className="px-2 py-1.5 text-[10px]">{row.tf0.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 text-[10px]">{row.tf1.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 text-[10px]">{row.tf2.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 text-[10px] font-semibold text-[#e2e2e6]">
+                  <td className="px-2 py-1.5 text-xs">{row.tf0.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-xs">{row.tf1.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-xs">{row.tf2.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-xs font-semibold text-[#e2e2e6]">
                     {row.idf.toFixed(4)}
                   </td>
-                  <td className="px-2 py-1.5 text-[10px]">{row.tfidf0.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 text-[10px]">{row.tfidf1.toFixed(4)}</td>
-                  <td className="px-2 py-1.5 text-[10px]">{row.tfidf2.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-xs">{row.tfidf0.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-xs">{row.tfidf1.toFixed(4)}</td>
+                  <td className="px-2 py-1.5 text-xs">{row.tfidf2.toFixed(4)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <p className="font-mono text-[10px] text-[#484852]">
+        <p className="font-mono text-xs text-[#484852]">
           Las stop words en español se eliminan automáticamente. Haz clic en una fila para
           resaltar la palabra en los documentos. Las palabras únicas de un documento tienen
           IDF alto (log(3/1) = 1.099), las compartidas tienen IDF bajo.

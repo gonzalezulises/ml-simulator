@@ -213,12 +213,12 @@ export function InterpretabilitySim() {
       <div className="space-y-6">
         {/* Model selector */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Selecciona un modelo</h3>
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2">Selecciona un modelo</h3>
           <div className="flex gap-2 flex-wrap">
             {MODELS.map((m) => (
               <button
                 key={m.key}
-                className={`font-mono text-[11px] px-3 py-1.5 rounded border transition-colors ${
+                className={`font-mono text-[13px] px-4 py-2 rounded border transition-colors ${
                   selectedModel === m.key
                     ? "bg-[#4A8FE8]/20 border-[#4A8FE8] text-[#4A8FE8]"
                     : "bg-[#1e1e24] border-[rgba(255,255,255,0.07)] text-[#888892] hover:text-[#e2e2e6] hover:border-[rgba(255,255,255,0.15)]"
@@ -244,24 +244,24 @@ export function InterpretabilitySim() {
 
         {/* Scatter with decision boundary */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2 flex items-center gap-2">
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2 flex items-center gap-2">
             Frontera de decision: {model.label}
-            <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892]">
+            <span className="font-mono text-xs px-3 py-1.5 rounded bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] text-[#888892]">
               Accuracy: {(accuracy * 100).toFixed(1)}%
             </span>
           </h3>
           <ResponsiveContainer width="100%" height={320}>
             <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
               <CartesianGrid stroke="#1e1e24" strokeDasharray="3 3" />
-              <XAxis dataKey="x" type="number" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} name="X" />
-              <YAxis dataKey="y" type="number" stroke="#484852" tick={{ fill: '#888892', fontSize: 10 }} name="Y" />
+              <XAxis dataKey="x" type="number" stroke="#484852" tick={{ fill: '#888892', fontSize: 12 }} name="X" />
+              <YAxis dataKey="y" type="number" stroke="#484852" tick={{ fill: '#888892', fontSize: 12 }} name="Y" />
               <ZAxis range={[15, 15]} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#16161a',
                   border: '1px solid rgba(255,255,255,0.07)',
                   borderRadius: '8px',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontFamily: 'monospace',
                 }}
               />
@@ -292,8 +292,8 @@ export function InterpretabilitySim() {
         {/* Model info panel */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-3">
-            <h3 className="text-[13px] font-medium text-[#e2e2e6]">Propiedades del modelo</h3>
-            <div className="space-y-2 text-[11px] font-mono">
+            <h3 className="text-[15px] font-medium text-[#e2e2e6]">Propiedades del modelo</h3>
+            <div className="space-y-2 text-[13px] font-mono">
               <div className="flex justify-between">
                 <span className="text-[#888892]">Accuracy:</span>
                 <span className="text-[#e2e2e6]">{(accuracy * 100).toFixed(1)}%</span>
@@ -314,11 +314,11 @@ export function InterpretabilitySim() {
           </div>
 
           <div className="p-4 rounded-lg bg-[#1e1e24] border border-[rgba(255,255,255,0.07)] space-y-2">
-            <h3 className="text-[13px] font-medium text-[#e2e2e6]">
+            <h3 className="text-[15px] font-medium text-[#e2e2e6]">
               Se lo puedes explicar a un gerente?
             </h3>
             <span
-              className={`inline-block font-mono text-[10px] px-2 py-1 rounded border ${
+              className={`inline-block font-mono text-xs px-3 py-1.5 rounded border ${
                 model.interpretability >= 4
                   ? "bg-[#1DB981]/15 border-[#1DB981]/20 text-[#1DB981]"
                   : model.interpretability >= 2
@@ -332,18 +332,18 @@ export function InterpretabilitySim() {
                 ? "Parcialmente"
                 : "Muy dificil"}
             </span>
-            <p className="text-[11px] text-[#888892] font-mono">{model.explanation}</p>
+            <p className="text-[13px] text-[#888892] font-mono">{model.explanation}</p>
           </div>
         </div>
 
         {/* Radar chart */}
         <div>
-          <h3 className="text-[13px] font-medium text-[#e2e2e6] mb-2">Comparativa de modelos</h3>
+          <h3 className="text-[15px] font-medium text-[#e2e2e6] mb-2">Comparativa de modelos</h3>
           <ResponsiveContainer width="100%" height={300}>
             <RadarChart data={radarData} outerRadius="70%">
               <PolarGrid stroke="#1e1e24" />
-              <PolarAngleAxis dataKey="metric" tick={{ fill: '#888892', fontSize: 10 }} />
-              <PolarRadiusAxis domain={[0, 5]} tick={{ fill: '#484852', fontSize: 10 }} />
+              <PolarAngleAxis dataKey="metric" tick={{ fill: '#888892', fontSize: 12 }} />
+              <PolarRadiusAxis domain={[0, 5]} tick={{ fill: '#484852', fontSize: 12 }} />
               <Radar
                 name="Lineal"
                 dataKey="linear"
@@ -377,7 +377,7 @@ export function InterpretabilitySim() {
                 strokeWidth={selectedModel === "neural" ? 2.5 : 1}
               />
               <Legend
-                wrapperStyle={{ fontSize: '10px', fontFamily: 'monospace' }}
+                wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace' }}
               />
             </RadarChart>
           </ResponsiveContainer>

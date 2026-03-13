@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ML Simulator
 
-## Getting Started
+Simulador interactivo de Machine Learning para aprender conceptos fundamentales de ciencia de datos.
 
-First, run the development server:
+## Descripción
+
+Herramienta educativa web que cubre un curso de 3 semanas de Machine Learning. Cada módulo combina:
+
+- **Teoría**: Explicaciones claras de los conceptos clave
+- **Simulación interactiva**: Ajusta parámetros y observa en tiempo real cómo cambian los modelos
+- **Quiz**: Preguntas para verificar tu comprensión
+
+## Temas cubiertos
+
+### Semana 1: Fundamentos
+- El costo de los datos supervisados
+- El perceptrón y su algoritmo de aprendizaje
+- Hiperplano, frontera de decisión y margen
+- La bendición de la dimensionalidad
+- Sobre-ajuste vs sub-ajuste
+
+### Semana 2: Árboles e Interpretabilidad
+- Trade-off interpretabilidad vs desempeño
+- Entropía y selección de features
+- Random Forest y ensambles
+- Umbrales de decisión y matrices de confusión
+- Curva ROC y AUC
+
+### Semana 3: Regresión Logística y NLP
+- Vectorización TF-IDF
+- Probabilidad, odds y la curva sigmoide
+- Regularización Ridge (L2)
+- Validación cruzada (K-Fold)
+- Grid Search de hiperparámetros
+
+## Stack tecnológico
+
+- [Next.js 15](https://nextjs.org/) (App Router, TypeScript)
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [recharts](https://recharts.org/)
+- [framer-motion](https://motion.dev/)
+
+## Desarrollo local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+El proyecto está configurado para desplegarse en [Vercel](https://vercel.com/).
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+```

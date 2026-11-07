@@ -12,6 +12,9 @@ version: 2
 # llenarse. Se encienden cuando el repo tenga su compuerta de CI.
 updates:
   - package-ecosystem: npm
+    # Siete días de madurez antes de proponer una versión.
+    cooldown:
+      default-days: 7
     directory: "/"
     schedule:
       interval: weekly
